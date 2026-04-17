@@ -16,6 +16,10 @@ export const env = {
   jwtSecret: requireEnv('JWT_SECRET', 'dev-only-secret-change-me'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+  frontendUrls: (process.env.FRONTEND_URLS ?? process.env.FRONTEND_URL ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   adminEmail: requireEnv('ADMIN_EMAIL', 'admin@studiokarinereverte.com'),
   adminPassword: requireEnv('ADMIN_PASSWORD', 'Admin@123456'),
   tidbHost: requireEnv('TIDB_HOST', 'localhost'),
