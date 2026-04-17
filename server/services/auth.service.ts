@@ -12,14 +12,14 @@ interface DbUser {
 }
 
 export const registerUser = async (name: string, email: string, password: string) => {
-  const [existing] = await db.query('SELECT id FROM users WHERE email = ?', [email])
+  const [existing] = await db.query('SELECT id FROM app_users WHERE email = ?', [email])
   if ((existing as Array<{ id: number }>).length > 0) {
     throw new Error('EMAIL_ALREADY_EXISTS')
   }
 
   const passwordHash = await hashPassword(password)
   const [result] = await db.query(
-    'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
+    'INSERT INTO app_users (name, email, password_hash) VALUES (?, ?, ?)',
     [name, email, passwordHash],
   )
 
@@ -28,7 +28,7 @@ export const registerUser = async (name: string, email: string, password: string
 }
 
 export const loginUser = async (email: string, password: string) => {
-  const [rows] = await db.query('SELECT id, name, email, password_hash FROM users WHERE email = ?', [email])
+  const [rows] = await db.query('SELECT id, name, email, password_hash FROM app_users WHERE email = ?', [email])
   const user = (rows as DbUser[])[0]
 
   if (!user) {
@@ -48,7 +48,7 @@ export const loginUser = async (email: string, password: string) => {
 }
 
 export const sendResetPassword = async (email: string) => {
-  const [rows] = await db.query('SELECT id, email FROM users WHERE email = ?', [email])
+  const [rows] = await db.query('SELECT id, email FROM app_users WHERE email = ?', [email])
   const user = (rows as Array<{ id: number; email: string }>)[0]
 
   if (!user) {
@@ -58,7 +58,7 @@ export const sendResetPassword = async (email: string) => {
   const token = crypto.randomBytes(32).toString('hex')
   const expiresAt = new Date(Date.now() + 1000 * 60 * 30)
 
-  await db.query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)', [
+  await db.query('INSERT INTO app_password_resets (user_id, token, expires_at) VALUES (?, ?, ?)', [
     user.id,
     token,
     expiresAt,

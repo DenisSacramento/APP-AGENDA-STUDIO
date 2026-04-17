@@ -42,6 +42,8 @@ authRouter.post('/register', sanitizeBody, validate(registerSchema), async (req,
       return res.status(409).json({ message: 'Email ja cadastrado' })
     }
 
+    console.error('Register error:', error)
+
     return res.status(500).json({ message: 'Falha ao criar conta' })
   }
 })
