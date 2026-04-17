@@ -37,6 +37,9 @@ export const RegisterPage = () => {
             onChange={(event) => setPassword(event.target.value)}
             required
           />
+          <p className="text-xs text-zinc-500">
+            A senha deve ter pelo menos 8 caracteres, com letra maiuscula, minuscula e numero.
+          </p>
           <Button fullWidth type="submit">
             Cadastrar
           </Button>

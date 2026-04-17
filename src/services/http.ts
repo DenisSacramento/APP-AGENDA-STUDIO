@@ -27,10 +27,17 @@ export const request = async <T>(path: string, config: RequestConfig = {}): Prom
     body: config.body ? JSON.stringify(config.body) : undefined,
   })
 
-  const payload = (await response.json().catch(() => ({}))) as { message?: string }
+  const payload = (await response.json().catch(() => ({}))) as {
+    message?: string
+    errors?: string[]
+  }
 
   if (!response.ok) {
-    throw new ApiError(payload.message ?? 'Falha de comunicacao com o servidor', response.status)
+    const details = payload.errors?.length ? `: ${payload.errors.join(', ')}` : ''
+    throw new ApiError(
+      `${payload.message ?? 'Falha de comunicacao com o servidor'}${details}`,
+      response.status,
+    )
   }
 
   return payload as T
