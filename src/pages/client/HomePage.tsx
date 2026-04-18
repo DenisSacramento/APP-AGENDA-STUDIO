@@ -197,6 +197,43 @@ export const HomePage = () => {
         </div>
       </section>
 
+      <section className="pb-12 pt-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-[28px] font-black text-[#8e005f] sm:text-[38px]">Ficou com duvidas?</h2>
+          <p className="mx-auto mt-4 max-w-[640px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
+            Entre em contato diretamente com a Karine pelo WhatsApp para tirar duvidas ou finalizar seu agendamento.
+          </p>
+          <a
+            href="https://wa.me/5511910928534"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#dbbe64] px-7 py-3 text-base font-bold text-[#2f1f05] shadow-[inset_0_1px_0_rgba(255,246,214,0.7),0_8px_18px_rgba(112,89,20,0.28),0_2px_5px_rgba(90,70,14,0.2)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#cfae4f]"
+          >
+            <MessageCircle size={17} /> Falar no WhatsApp
+          </a>
+        </div>
+      </section>
+
+      <footer className="overflow-hidden rounded-[28px] border border-[#d9d1e4] bg-[#f2edf7] px-6 py-8 text-[#3d2f4a] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_8px_22px_rgba(66,45,84,0.08)] sm:px-10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h3 className="leading-tight">
+              <span className="studio-script studio-effect block -rotate-[3deg] text-[22px] leading-none text-[#debf6d]">Studio</span>
+              <span className="block mt-0.5 text-[15px] font-black tracking-[0.1em] text-[#d10677]">KARINE REVERTE</span>
+            </h3>
+            <p className="mt-1 text-base text-[#6a5a78]">Tv. Nicola de Giosa, 37 - Itaim Paulista, Sao Paulo</p>
+          </div>
+          <div className="text-base text-[#6a5a78] sm:text-right">
+            <p>WhatsApp: (11) 91092-8534</p>
+            <p>Seg-Sex: 9h-19h | Sab: 9h-17h</p>
+          </div>
+        </div>
+        <div className="mt-6 border-t border-[#ddd4e7] pt-5 text-center text-sm text-[#7c7088]">
+          <p>© 2026 Studio Karine Reverte. Todos os direitos reservados.</p>
+          <p className="mt-1 text-xs text-[#94899f]">Desenvolvido por Denis Sacramento- DSDEV</p>
+        </div>
+      </footer>
+
       <a
         href="https://wa.me/5500000000000"
         target="_blank"

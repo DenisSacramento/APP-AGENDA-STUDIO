@@ -21,6 +21,30 @@ body {
   background: #fff8f7;
 }
 
+.app-atmosphere {
+  background:
+    radial-gradient(72% 95% at 4% 18%, rgba(205, 177, 233, 0.46) 0%, rgba(205, 177, 233, 0.2) 34%, transparent 72%),
+    radial-gradient(52% 74% at 88% 16%, rgba(246, 203, 225, 0.28) 0%, rgba(246, 203, 225, 0.12) 42%, transparent 74%),
+    radial-gradient(56% 78% at 93% 82%, rgba(246, 230, 179, 0.3) 0%, rgba(246, 230, 179, 0.1) 42%, transparent 76%),
+    radial-gradient(34% 48% at 20% 88%, rgba(239, 213, 246, 0.22) 0%, rgba(239, 213, 246, 0.08) 45%, transparent 78%),
+    linear-gradient(160deg, #f8f6fb 0%, #f6f2fb 45%, #f8f4f7 74%, #faf8f3 100%);
+}
+
+.app-atmosphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.1) 0px,
+      rgba(255, 255, 255, 0.1) 2px,
+      transparent 2px,
+      transparent 28px
+    );
+  opacity: 0.22;
+}
+
 .studio-script {
   font-family: 'Great Vibes', cursive;
   font-weight: 400;
