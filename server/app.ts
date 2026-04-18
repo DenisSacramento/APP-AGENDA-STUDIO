@@ -1,11 +1,11 @@
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
-import { env } from './config/env'
-import { errorHandler } from './middleware/error-handler'
-import { authRouter } from './routes/auth.routes'
-import { appointmentRouter } from './routes/appointments.routes'
-import { adminRouter } from './routes/admin.routes'
+import { env } from './config/env.js'
+import { errorHandler } from './middleware/error-handler.js'
+import { authRouter } from './routes/auth.routes.js'
+import { appointmentRouter } from './routes/appointments.routes.js'
+import { adminRouter } from './routes/admin.routes.js'
 
 export const app = express()
 
@@ -34,3 +34,4 @@ app.use('/api/appointments', appointmentRouter)
 app.use('/api/admin', adminRouter)
 
 app.use(errorHandler)
+

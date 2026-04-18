@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { env } from './env'
+import { env } from './env.js'
 
 export const db = mysql.createPool({
   host: env.tidbHost,
@@ -77,9 +77,10 @@ export const initDatabase = async () => {
         VALUES
           ('Corte Feminino', 'Corte moderno com finalizacao personalizada.', 60, 120.00),
           ('Escova Modelada', 'Escova com acabamento e volume sob medida.', 50, 90.00),
-          ('Manicure Premium', 'Cuidado completo com esmaltação de alta durabilidade.', 45, 65.00),
+          ('Manicure Premium', 'Cuidado completo com esmaltacao de alta durabilidade.', 45, 65.00),
           ('Coloracao', 'Coloracao completa com avaliacao profissional.', 120, 250.00)
       `,
     )
   }
 }
+

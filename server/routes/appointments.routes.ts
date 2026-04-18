@@ -1,15 +1,15 @@
 import { Router } from 'express'
-import { requireAuth } from '../middleware/auth'
-import { sanitizeBody } from '../middleware/sanitize'
-import { validate } from '../middleware/validate'
+import { requireAuth } from '../middleware/auth.js'
+import { sanitizeBody } from '../middleware/sanitize.js'
+import { validate } from '../middleware/validate.js'
 import {
   cancelUserAppointment,
   createAppointment,
   listAvailableTimes,
   listServices,
   listUserAppointments,
-} from '../services/appointment.service'
-import { createAppointmentSchema } from '../validators/appointment.validator'
+} from '../services/appointment.service.js'
+import { createAppointmentSchema } from '../validators/appointment.validator.js'
 
 export const appointmentRouter = Router()
 
@@ -67,3 +67,4 @@ appointmentRouter.patch('/:id/cancel', requireAuth, async (req, res) => {
 
   return res.json({ message: 'Agendamento cancelado com sucesso' })
 })
+

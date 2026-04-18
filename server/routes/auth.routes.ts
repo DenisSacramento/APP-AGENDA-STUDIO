@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
-import { sanitizeBody } from '../middleware/sanitize'
-import { validate } from '../middleware/validate'
-import { forgotPasswordSchema, loginSchema, registerSchema } from '../validators/auth.validator'
-import { loginUser, registerUser, sendResetPassword } from '../services/auth.service'
-import { signToken } from '../utils/jwt'
+import { sanitizeBody } from '../middleware/sanitize.js'
+import { validate } from '../middleware/validate.js'
+import { forgotPasswordSchema, loginSchema, registerSchema } from '../validators/auth.validator.js'
+import { loginUser, registerUser, sendResetPassword } from '../services/auth.service.js'
+import { signToken } from '../utils/jwt.js'
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -86,3 +86,4 @@ authRouter.post('/forgot-password', sanitizeBody, validate(forgotPasswordSchema)
     message: 'Se o email existir, enviaremos as instrucoes de recuperacao.',
   })
 })
+

@@ -1,6 +1,6 @@
-import { app } from './app'
-import { initDatabase } from './config/db'
-import { env } from './config/env'
+import { app } from './app.js'
+import { initDatabase } from './config/db.js'
+import { env } from './config/env.js'
 
 initDatabase()
   .then(() => {
@@ -12,3 +12,4 @@ initDatabase()
     console.error('Database initialization failed', error)
     process.exit(1)
   })
+

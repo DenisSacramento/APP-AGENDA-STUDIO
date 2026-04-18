@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { verifyToken } from '../utils/jwt'
+import { verifyToken } from '../utils/jwt.js'
 
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
@@ -23,3 +23,4 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
 
   return next()
 }
+

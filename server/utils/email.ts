@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { env } from '../config/env'
+import { env } from '../config/env.js'
 
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
   if (!env.smtpHost || !env.smtpUser || !env.smtpPass) {
@@ -25,3 +25,4 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
     html: `<p>Voce solicitou recuperacao de senha.</p><p><a href="${resetLink}">Clique aqui para redefinir sua senha</a></p>`,
   })
 }
+

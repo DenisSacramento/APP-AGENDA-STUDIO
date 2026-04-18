@@ -1,8 +1,8 @@
 import crypto from 'node:crypto'
-import { db } from '../config/db'
-import { env } from '../config/env'
-import { comparePassword, hashPassword } from '../utils/password'
-import { sendPasswordResetEmail } from '../utils/email'
+import { db } from '../config/db.js'
+import { env } from '../config/env.js'
+import { comparePassword, hashPassword } from '../utils/password.js'
+import { sendPasswordResetEmail } from '../utils/email.js'
 
 interface DbUser {
   id: number
@@ -67,3 +67,4 @@ export const sendResetPassword = async (email: string) => {
   const resetLink = `${env.frontendUrl}/reset-password?token=${token}`
   await sendPasswordResetEmail(user.email, resetLink)
 }
+

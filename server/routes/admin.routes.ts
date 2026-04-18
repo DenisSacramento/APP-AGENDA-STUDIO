@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { env } from '../config/env'
-import { requireAdmin, requireAuth } from '../middleware/auth'
-import { sanitizeBody } from '../middleware/sanitize'
-import { validate } from '../middleware/validate'
-import { comparePassword } from '../utils/password'
-import { signToken } from '../utils/jwt'
-import { loginSchema } from '../validators/auth.validator'
-import { updateAppointmentStatusSchema } from '../validators/appointment.validator'
-import { listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service'
+import { env } from '../config/env.js'
+import { requireAdmin, requireAuth } from '../middleware/auth.js'
+import { sanitizeBody } from '../middleware/sanitize.js'
+import { validate } from '../middleware/validate.js'
+import { comparePassword } from '../utils/password.js'
+import { signToken } from '../utils/jwt.js'
+import { loginSchema } from '../validators/auth.validator.js'
+import { updateAppointmentStatusSchema } from '../validators/appointment.validator.js'
+import { listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
 
 export const adminRouter = Router()
 
@@ -69,7 +69,7 @@ adminRouter.patch(
 )
 
 const importAdminPasswordHash = async () => {
-  const { hashPassword } = await import('../utils/password')
+  const { hashPassword } = await import('../utils/password.js')
 
   if (env.adminPassword.startsWith('$2')) {
     return env.adminPassword
@@ -77,3 +77,4 @@ const importAdminPasswordHash = async () => {
 
   return hashPassword(env.adminPassword)
 }
+

@@ -1,4 +1,4 @@
-import { db } from '../config/db'
+import { db } from '../config/db.js'
 
 export const listServices = async () => {
   const [rows] = await db.query(
@@ -136,3 +136,4 @@ export const updateAppointmentStatus = async (
 
   return (result as { affectedRows: number }).affectedRows > 0
 }
+
