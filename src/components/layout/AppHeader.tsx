@@ -20,7 +20,7 @@ export const AppHeader = () => {
 
         <nav className="hidden items-center gap-2 md:flex">
           <NavLink className={navItemClass} to="/services">
-            <Scissors size={17} /> Servicos
+            <Scissors size={17} /> Serviços
           </NavLink>
           <NavLink className={navItemClass} to="/booking">
             <CalendarDays size={17} /> Agendar

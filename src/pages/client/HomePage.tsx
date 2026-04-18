@@ -12,7 +12,7 @@ export const HomePage = () => {
       <section className="mx-auto flex min-h-[calc(100vh-86px)] max-w-3xl flex-col items-center justify-center py-10 text-center">
         <div className="space-y-7">
           <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#8e005f] sm:text-base">
-            <Sparkles size={16} /> Seu salao de beleza de confianca
+            <Sparkles size={16} /> Seu salão de beleza de confiança
           </p>
           <div className="space-y-2">
             <p className="studio-script studio-effect -rotate-[5deg] text-[61px] leading-none text-[#dfc370] sm:text-[85px]">Studio</p>
@@ -21,13 +21,13 @@ export const HomePage = () => {
             </h1>
           </div>
           <p className="mx-auto max-w-[560px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
-            Aqui nos nao cuidamos somente da estetica, cuidamos de pessoas, devolvendo autoestima, dignidade e alegria. Voce e tratada
+            Aqui nós não cuidamos somente da estética, cuidamos de pessoas, devolvendo autoestima, dignidade e alegria. Você é tratada
             com respeito, honestidade e amor.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
             <Link to="/booking">
               <Button className="inline-flex items-center gap-2 bg-[#dbbe64] px-6 py-2.5 text-base font-bold text-[#2f1f05] shadow-[inset_0_1px_0_rgba(255,246,214,0.7),0_8px_18px_rgba(112,89,20,0.28),0_2px_5px_rgba(90,70,14,0.2)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#cfae4f] hover:!text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.62),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]">
-                <CalendarDays size={16} /> Agendar Horario
+                <CalendarDays size={16} /> Agendar Horário
               </Button>
             </Link>
             <Link to="/services">
@@ -35,7 +35,7 @@ export const HomePage = () => {
                 variant="ghost"
                 className="inline-flex items-center gap-2 border border-[#d36bad] bg-transparent px-6 py-2.5 text-base font-bold text-[#9a126f] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_8px_18px_rgba(56,31,46,0.18),0_2px_5px_rgba(39,23,31,0.14)] transition duration-300 hover:-translate-y-0.5 hover:!border-[#cfae4f] hover:!bg-[#cfae4f] hover:!text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.58),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]"
               >
-                <Scissors size={16} /> Ver Servicos
+                <Scissors size={16} /> Ver Serviços
               </Button>
             </Link>
           </div>
@@ -51,7 +51,7 @@ export const HomePage = () => {
             </span>
             <div className="leading-tight">
               <p className="text-[17px] font-bold text-[#261a3b]">Atendimento Personalizado</p>
-              <p className="mt-1 text-base text-[#6c5574]">Cada cliente e unica e especial</p>
+              <p className="mt-1 text-base text-[#6c5574]">Cada cliente é única e especial</p>
             </div>
           </div>
 
@@ -61,7 +61,7 @@ export const HomePage = () => {
             </span>
             <div className="leading-tight">
               <p className="text-[17px] font-bold text-[#261a3b]">Agendamento Online</p>
-              <p className="mt-1 text-base text-[#6c5574]">Marque seu horario pelo app</p>
+              <p className="mt-1 text-base text-[#6c5574]">Marque seu horário pelo app</p>
             </div>
           </div>
 
@@ -79,10 +79,10 @@ export const HomePage = () => {
           <div className="mx-auto mt-24 max-w-3xl text-center sm:mt-28">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8e005f] sm:text-base">O que oferecemos</p>
             <h2 className="mt-3 text-[28px] font-black uppercase tracking-[0.12em] text-[#8e005f] sm:text-[38px]">
-              Nossos Servicos
+              Nossos Serviços
             </h2>
             <p className="mx-auto mt-4 max-w-[620px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
-              Tratamentos especializados para realcar a beleza e saude dos seus cabelos
+              Tratamentos especializados para realçar a beleza e saúde dos seus cabelos
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export const HomePage = () => {
               <h3 className="mt-3 w-full max-w-[240px] text-[17px] font-extrabold uppercase leading-snug tracking-[0.03em] text-[#34263f] [overflow-wrap:anywhere]">
                 Progressiva P e M
               </h3>
-              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Progressiva para cabelo pequeno e medio</p>
+              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Progressiva para cabelo pequeno e médio</p>
               <p className="mt-auto inline-flex items-center gap-1 pt-2 text-sm text-[#7b6481]">
                 <Clock3 size={14} /> 180 min
               </p>
@@ -138,9 +138,9 @@ export const HomePage = () => {
             <article className={serviceCardClass}>
               <Palette className="mx-auto text-[#a23ba0]" size={28} />
               <h3 className="mt-3 w-full max-w-[240px] text-[17px] font-extrabold uppercase leading-snug tracking-[0.03em] text-[#34263f] [overflow-wrap:anywhere]">
-                Coloracao + Hidratacao
+                Coloração + Hidratação
               </h3>
-              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Coloracao com hidratacao</p>
+              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Coloração com hidratação</p>
               <p className="mt-auto inline-flex items-center gap-1 pt-2 text-sm text-[#7b6481]">
                 <Clock3 size={14} /> 120 min
               </p>
@@ -162,9 +162,9 @@ export const HomePage = () => {
             <article className={serviceCardClass}>
               <Heart className="mx-auto text-[#8d5ac7]" size={28} />
               <h3 className="mt-3 w-full max-w-[240px] text-[17px] font-extrabold uppercase leading-snug tracking-[0.03em] text-[#34263f] [overflow-wrap:anywhere]">
-                Escova Mega Hair + Hidratacao
+                Escova Mega Hair + Hidratação
               </h3>
-              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Escova com hidratacao para mega hair</p>
+              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Escova com hidratação para mega hair</p>
               <p className="mt-auto inline-flex items-center gap-1 pt-2 text-sm text-[#7b6481]">
                 <Clock3 size={14} /> 120 min
               </p>
@@ -174,9 +174,9 @@ export const HomePage = () => {
             <article className={serviceCardClass}>
               <Droplets className="mx-auto text-[#4d8bb8]" size={28} />
               <h3 className="mt-3 w-full max-w-[240px] text-[17px] font-extrabold uppercase leading-snug tracking-[0.03em] text-[#34263f] [overflow-wrap:anywhere]">
-                Hidroreconstrucao
+                Hidroreconstrução
               </h3>
-              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Tratamento de hidroreconstrucao</p>
+              <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">Tratamento de hidroreconstrução</p>
               <p className="mt-auto inline-flex items-center gap-1 pt-2 text-sm text-[#7b6481]">
                 <Clock3 size={14} /> 90 min
               </p>
@@ -190,7 +190,7 @@ export const HomePage = () => {
                 variant="ghost"
                 className="inline-flex items-center gap-2 border border-[#b83286] bg-transparent px-8 py-2.5 text-xl font-bold text-[#a41577] shadow-[0_5px_12px_rgba(40,20,34,0.1)] transition duration-300 hover:-translate-y-0.5 hover:!border-[#cfae4f] hover:!bg-[#cfae4f] hover:!text-[#2a1a04] hover:shadow-[0_12px_24px_rgba(109,82,24,0.3)]"
               >
-                Ver todos os servicos
+                Ver todos os serviços
               </Button>
             </Link>
           </div>
@@ -199,9 +199,9 @@ export const HomePage = () => {
 
       <section className="pb-12 pt-10">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-[28px] font-black text-[#8e005f] sm:text-[38px]">Ficou com duvidas?</h2>
+          <h2 className="text-[28px] font-black text-[#8e005f] sm:text-[38px]">Ficou com dúvidas?</h2>
           <p className="mx-auto mt-4 max-w-[640px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
-            Entre em contato diretamente com a Karine pelo WhatsApp para tirar duvidas ou finalizar seu agendamento.
+            Entre em contato diretamente com a Karine pelo WhatsApp para tirar dúvidas ou finalizar seu agendamento.
           </p>
           <a
             href="https://wa.me/5511910928534"
@@ -221,11 +221,11 @@ export const HomePage = () => {
               <span className="studio-script studio-effect block -rotate-[3deg] text-[22px] leading-none text-[#debf6d]">Studio</span>
               <span className="block mt-0.5 text-[15px] font-black tracking-[0.1em] text-[#d10677]">KARINE REVERTE</span>
             </h3>
-            <p className="mt-1 text-base text-[#6a5a78]">Tv. Nicola de Giosa, 37 - Itaim Paulista, Sao Paulo</p>
+            <p className="mt-1 text-base text-[#6a5a78]">Tv. Nicola de Giosa, 37 - Itaim Paulista, São Paulo</p>
           </div>
           <div className="text-base text-[#6a5a78] sm:text-right">
             <p>WhatsApp: (11) 91092-8534</p>
-            <p>Seg-Sex: 9h-19h | Sab: 9h-17h</p>
+            <p>Seg-Sex: 9h-19h | Sáb: 9h-17h</p>
           </div>
         </div>
         <div className="mt-6 border-t border-[#ddd4e7] pt-5 text-center text-sm text-[#7c7088]">
