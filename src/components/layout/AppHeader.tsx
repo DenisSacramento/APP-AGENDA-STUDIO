@@ -8,7 +8,7 @@ export const AppHeader = () => {
   const { user, logout, isAuthenticated } = useAuth()
   const [open, setOpen] = useState(false)
   const navItemClass =
-    'inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-base font-semibold text-zinc-700 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:text-zinc-900'
+    'inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-base font-semibold text-zinc-700 shadow-[0_5px_12px_rgba(30,30,30,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-[#cfae4f] hover:bg-[#cfae4f] hover:text-[#2a1a04] hover:shadow-[0_12px_24px_rgba(109,82,24,0.3)]'
 
   return (
     <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-[#f6f2fb]/95 backdrop-blur">
@@ -35,7 +35,7 @@ export const AppHeader = () => {
             <Button
               variant="ghost"
               onClick={() => setOpen((value) => !value)}
-              className="inline-flex items-center gap-2 border border-zinc-200 bg-white px-4 py-2 font-semibold text-zinc-700 shadow-sm"
+              className="inline-flex items-center gap-2 border border-zinc-200 bg-white px-4 py-2 font-semibold text-zinc-700 shadow-[0_5px_12px_rgba(30,30,30,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-[#cfae4f] hover:bg-[#cfae4f] hover:text-[#2a1a04] hover:shadow-[0_12px_24px_rgba(109,82,24,0.3)]"
             >
               {user.name.split(' ')[0]}
               <ChevronDown size={16} />
@@ -77,12 +77,14 @@ export const AppHeader = () => {
         ) : (
           <div className="flex items-center gap-2">
             <Link to="/login" className="hidden sm:block">
-              <Button className="bg-[#940068] px-6 py-2 text-lg font-bold text-white shadow-[0_8px_20px_rgba(148,0,104,0.28)] hover:bg-[#7c0058]">
+              <Button className="bg-[#940068] px-6 py-2 text-lg font-bold text-white shadow-[0_8px_20px_rgba(148,0,104,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#cfae4f] hover:text-[#2a1a04] hover:shadow-[0_12px_24px_rgba(109,82,24,0.3)]">
                 Entrar / Cadastrar
               </Button>
             </Link>
             <Link to="/login" className="sm:hidden">
-              <Button className="bg-[#940068] px-4 py-2 text-sm font-bold text-white hover:bg-[#7c0058]">Entrar</Button>
+              <Button className="bg-[#940068] px-4 py-2 text-sm font-bold text-white transition duration-300 hover:bg-[#cfae4f] hover:text-[#2a1a04]">
+                Entrar
+              </Button>
             </Link>
           </div>
         )}

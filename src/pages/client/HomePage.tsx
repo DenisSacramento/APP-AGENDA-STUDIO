@@ -13,7 +13,7 @@ export const HomePage = () => {
           </p>
           <div className="space-y-2">
             <p className="studio-script studio-effect -rotate-[5deg] text-[61px] leading-none text-[#dfc370] sm:text-[85px]">Studio</p>
-            <h1 className="text-5xl font-black uppercase tracking-[0.14em] text-[#d10677] drop-shadow-[0_3px_0_rgba(107,0,69,0.18)] sm:text-6xl">
+            <h1 className="text-[40px] font-black uppercase tracking-[0.12em] text-[#d10677] drop-shadow-[0_3px_0_rgba(107,0,69,0.18)] sm:text-[52px]">
               Karine Reverte
             </h1>
           </div>
@@ -23,16 +23,16 @@ export const HomePage = () => {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
             <Link to="/booking">
-              <Button className="inline-flex items-center gap-2 bg-[#dbbe64] px-8 py-3 text-xl font-bold text-[#2f1f05] shadow-[0_6px_16px_rgba(112,89,20,0.2)] hover:bg-[#ccb055]">
-                <CalendarDays size={18} /> Agendar Horario
+              <Button className="inline-flex items-center gap-2 bg-[#dbbe64] px-6 py-2.5 text-base font-bold text-[#2f1f05] shadow-[inset_0_1px_0_rgba(255,246,214,0.7),0_8px_18px_rgba(112,89,20,0.28),0_2px_5px_rgba(90,70,14,0.2)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#cfae4f] hover:text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.62),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]">
+                <CalendarDays size={16} /> Agendar Horario
               </Button>
             </Link>
             <Link to="/services">
               <Button
                 variant="ghost"
-                className="inline-flex items-center gap-2 border border-[#d36bad] bg-transparent px-8 py-3 text-xl font-bold text-[#9a126f] hover:bg-[#f6ebf2]"
+                className="inline-flex items-center gap-2 border border-[#d36bad] bg-transparent px-6 py-2.5 text-base font-bold text-[#9a126f] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_8px_18px_rgba(56,31,46,0.18),0_2px_5px_rgba(39,23,31,0.14)] transition duration-300 hover:-translate-y-0.5 hover:border-[#cfae4f] hover:bg-[#cfae4f] hover:text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.58),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]"
               >
-                <Scissors size={18} /> Ver Servicos
+                <Scissors size={16} /> Ver Servicos
               </Button>
             </Link>
           </div>
