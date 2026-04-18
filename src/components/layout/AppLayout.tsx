@@ -3,8 +3,8 @@ import { AppHeader } from './AppHeader'
 
 export const AppLayout = () => {
   return (
-    <div className="min-h-screen bg-app">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_rgba(244,114,182,0.18),_transparent_40%),radial-gradient(circle_at_bottom_left,_rgba(251,191,36,0.2),_transparent_35%)]" />
+    <div className="min-h-screen bg-[#f8f7fb]">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60%_90%_at_0%_40%,_rgba(205,177,233,0.48),_transparent_70%),radial-gradient(60%_80%_at_100%_85%,_rgba(242,231,222,0.5),_transparent_75%)]" />
       <AppHeader />
       <main>
         <Outlet />

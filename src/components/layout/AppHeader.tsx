@@ -1,29 +1,42 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { ChevronDown } from 'lucide-react'
+import { CalendarDays, ChevronDown, Gift, Scissors } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../ui/Button'
 
 export const AppHeader = () => {
   const { user, logout, isAuthenticated } = useAuth()
   const [open, setOpen] = useState(false)
+  const navItemClass =
+    'inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-base font-semibold text-zinc-700 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:text-zinc-900'
 
   return (
-    <header className="sticky top-0 z-30 border-b border-rose-100 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/" className="font-display text-xl font-bold tracking-wide text-rose-900">
-          Studio Karine Reverte
+    <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-[#f6f2fb]/95 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <Link to="/" className="leading-tight">
+          <span className="studio-script studio-effect block -rotate-[5deg] text-[31px] leading-none text-[#debf6d]">Studio</span>
+          <span className="block -mt-1 text-[17px] font-black tracking-[0.1em] text-[#d10677]">KARINE REVERTE</span>
         </Link>
 
-        <nav className="hidden items-center gap-5 text-sm text-zinc-700 md:flex">
-          <NavLink to="/services">Servicos</NavLink>
-          <NavLink to="/booking">Agendar</NavLink>
-          <NavLink to="/offers">Ofertas</NavLink>
+        <nav className="hidden items-center gap-2 md:flex">
+          <NavLink className={navItemClass} to="/services">
+            <Scissors size={17} /> Servicos
+          </NavLink>
+          <NavLink className={navItemClass} to="/booking">
+            <CalendarDays size={17} /> Agendar
+          </NavLink>
+          <NavLink className={navItemClass} to="/offers">
+            <Gift size={17} /> Ofertas
+          </NavLink>
         </nav>
 
         {isAuthenticated && user ? (
           <div className="relative">
-            <Button variant="ghost" onClick={() => setOpen((value) => !value)} className="inline-flex items-center gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setOpen((value) => !value)}
+              className="inline-flex items-center gap-2 border border-zinc-200 bg-white px-4 py-2 font-semibold text-zinc-700 shadow-sm"
+            >
               {user.name.split(' ')[0]}
               <ChevronDown size={16} />
             </Button>
@@ -63,11 +76,13 @@ export const AppHeader = () => {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="ghost">Entrar</Button>
+            <Link to="/login" className="hidden sm:block">
+              <Button className="bg-[#940068] px-6 py-2 text-lg font-bold text-white shadow-[0_8px_20px_rgba(148,0,104,0.28)] hover:bg-[#7c0058]">
+                Entrar / Cadastrar
+              </Button>
             </Link>
-            <Link to="/register">
-              <Button>Criar conta</Button>
+            <Link to="/login" className="sm:hidden">
+              <Button className="bg-[#940068] px-4 py-2 text-sm font-bold text-white hover:bg-[#7c0058]">Entrar</Button>
             </Link>
           </div>
         )}

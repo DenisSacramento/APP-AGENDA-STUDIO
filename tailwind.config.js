@@ -5,7 +5,8 @@ export default {
     extend: {
       fontFamily: {
         display: ['Playfair Display', 'serif'],
-        sans: ['Manrope', 'sans-serif'],
+        script: ['Great Vibes', 'cursive'],
+        sans: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
         app: 'linear-gradient(180deg, #fff8f7 0%, #fffefc 55%, #fff 100%)',

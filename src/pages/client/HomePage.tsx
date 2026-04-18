@@ -1,48 +1,53 @@
 import { Link } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
+import { CalendarDays, MessageCircle, Scissors, Sparkles } from 'lucide-react'
 import { PageContainer } from '../../components/layout/PageContainer'
 import { Button } from '../../components/ui/Button'
-import { Card } from '../../components/ui/Card'
 
 export const HomePage = () => {
   return (
     <PageContainer>
-      <section className="grid gap-6 py-10 md:grid-cols-[1.3fr_1fr] md:items-center">
-        <div className="space-y-5">
-          <p className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-1 text-xs font-semibold text-rose-700">
-            <Sparkles size={14} /> Experiencia premium de beleza
+      <section className="mx-auto flex min-h-[calc(100vh-86px)] max-w-3xl flex-col items-center justify-center py-10 text-center">
+        <div className="space-y-7">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#8e005f] sm:text-base">
+            <Sparkles size={16} /> Seu salao de beleza de confianca
           </p>
-          <h1 className="font-display text-4xl leading-tight text-rose-900 sm:text-5xl">
-            Studio Karine Reverte
-          </h1>
-          <p className="max-w-xl text-zinc-600">
-            Seu tempo e sua beleza importam. Agende servicos com poucos cliques e acompanhe tudo em um painel moderno.
+          <div className="space-y-2">
+            <p className="studio-script studio-effect -rotate-[5deg] text-[61px] leading-none text-[#dfc370] sm:text-[85px]">Studio</p>
+            <h1 className="text-5xl font-black uppercase tracking-[0.14em] text-[#d10677] drop-shadow-[0_3px_0_rgba(107,0,69,0.18)] sm:text-6xl">
+              Karine Reverte
+            </h1>
+          </div>
+          <p className="mx-auto max-w-[560px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
+            Aqui nos nao cuidamos somente da estetica, cuidamos de pessoas, devolvendo autoestima, dignidade e alegria. Voce e tratada
+            com respeito, honestidade e amor.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Link to="/services">
-              <Button>Servicos</Button>
-            </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
             <Link to="/booking">
-              <Button variant="secondary">Agendar</Button>
+              <Button className="inline-flex items-center gap-2 bg-[#dbbe64] px-8 py-3 text-xl font-bold text-[#2f1f05] shadow-[0_6px_16px_rgba(112,89,20,0.2)] hover:bg-[#ccb055]">
+                <CalendarDays size={18} /> Agendar Horario
+              </Button>
             </Link>
-            <Link to="/offers">
-              <Button variant="ghost">Ofertas</Button>
+            <Link to="/services">
+              <Button
+                variant="ghost"
+                className="inline-flex items-center gap-2 border border-[#d36bad] bg-transparent px-8 py-3 text-xl font-bold text-[#9a126f] hover:bg-[#f6ebf2]"
+              >
+                <Scissors size={18} /> Ver Servicos
+              </Button>
             </Link>
           </div>
         </div>
-
-        <Card className="space-y-3 bg-gradient-to-br from-white to-rose-50">
-          <h2 className="font-display text-2xl text-rose-900">Atendimento personalizado</h2>
-          <p className="text-sm text-zinc-600">
-            Corte, coloracao, manicure e tratamentos com agenda inteligente, sem conflitos e com confirmacao em tempo real.
-          </p>
-          <ul className="space-y-2 text-sm text-zinc-700">
-            <li>Agenda organizada por horario</li>
-            <li>Historico de agendamentos</li>
-            <li>Painel administrativo completo</li>
-          </ul>
-        </Card>
       </section>
+
+      <a
+        href="https://wa.me/5500000000000"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Falar no WhatsApp"
+        className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#22c35e] text-white shadow-[0_8px_18px_rgba(14,118,53,0.35)] transition hover:scale-105"
+      >
+        <MessageCircle size={28} />
+      </a>
     </PageContainer>
   )
 }
