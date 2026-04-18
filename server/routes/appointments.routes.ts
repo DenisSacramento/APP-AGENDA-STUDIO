@@ -9,6 +9,7 @@ import {
   listServices,
   listUserAppointments,
 } from '../services/appointment.service.js'
+import type { AuthenticatedRequest } from '../types/auth.js'
 import { createAppointmentSchema } from '../validators/appointment.validator.js'
 
 export const appointmentRouter = Router()
@@ -30,7 +31,7 @@ appointmentRouter.get('/slots', async (req, res) => {
 })
 
 appointmentRouter.post('/', requireAuth, sanitizeBody, validate(createAppointmentSchema), async (req, res) => {
-  const userId = Number(req.user?.sub)
+  const userId = Number((req as AuthenticatedRequest).user?.sub)
   const { serviceId, date, time, notes } = req.body
 
   try {
@@ -50,13 +51,13 @@ appointmentRouter.post('/', requireAuth, sanitizeBody, validate(createAppointmen
 })
 
 appointmentRouter.get('/me', requireAuth, async (req, res) => {
-  const userId = Number(req.user?.sub)
+  const userId = Number((req as AuthenticatedRequest).user?.sub)
   const appointments = await listUserAppointments(userId)
   return res.json(appointments)
 })
 
 appointmentRouter.patch('/:id/cancel', requireAuth, async (req, res) => {
-  const userId = Number(req.user?.sub)
+  const userId = Number((req as AuthenticatedRequest).user?.sub)
   const appointmentId = Number(req.params.id)
 
   const canceled = await cancelUserAppointment(appointmentId, userId)

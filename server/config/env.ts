@@ -15,8 +15,19 @@ export const env = {
   port: Number(process.env.PORT ?? 8787),
   jwtSecret: requireEnv('JWT_SECRET', 'dev-only-secret-change-me'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
-  frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:5173',
-  frontendUrls: (process.env.FRONTEND_URLS ?? process.env.FRONTEND_URL ?? 'http://localhost:5173')
+  frontendUrl:
+    process.env.FRONTEND_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:5173'),
+  frontendUrls: (
+    process.env.FRONTEND_URLS ??
+    [
+      process.env.FRONTEND_URL,
+      process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+      'http://localhost:5173',
+    ]
+      .filter(Boolean)
+      .join(',')
+  )
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),

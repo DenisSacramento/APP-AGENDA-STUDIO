@@ -1,3 +1,5 @@
+import type { Request } from 'express'
+
 export type UserRole = 'client' | 'admin'
 
 export interface AuthTokenPayload {
