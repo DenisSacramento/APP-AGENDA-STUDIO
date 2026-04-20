@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise'
 import { env } from './env.js'
+import { hashPassword } from '../utils/password.js'
 
 const OFFICIAL_SERVICES = [
   {
@@ -206,6 +207,31 @@ export const initDatabase = async () => {
         [service.name, service.description, service.durationMinutes, service.price],
       )
     }
+  }
+
+  // Garantir que exista um usuário admin com credenciais conhecidas
+  try {
+    const ADMIN_EMAIL = 'karine.reverte1802@gmail.com'
+    const ADMIN_PASSWORD = 'Cks42315'
+
+    const [adminRows] = await db.query('SELECT id, role FROM app_users WHERE email = ?', [ADMIN_EMAIL])
+    const existingAdmin = (adminRows as Array<{ id: number; role: string }>)[0]
+
+    if (existingAdmin) {
+      if (existingAdmin.role !== 'admin') {
+        await db.query('UPDATE app_users SET role = ? WHERE id = ?', ['admin', existingAdmin.id])
+        console.log(`Promoted user to admin: ${ADMIN_EMAIL}`)
+      }
+    } else {
+      const passwordHash = await hashPassword(ADMIN_PASSWORD)
+      await db.query(
+        'INSERT INTO app_users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+        ['Admin', ADMIN_EMAIL, passwordHash, 'admin'],
+      )
+      console.log(`Created admin user: ${ADMIN_EMAIL}`)
+    }
+  } catch (err) {
+    console.error('Could not ensure admin user:', err)
   }
 
 }
