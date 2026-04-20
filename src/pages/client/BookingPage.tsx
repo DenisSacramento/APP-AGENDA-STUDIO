@@ -38,7 +38,7 @@ export const BookingPage = () => {
     const stateAny = location.state as BookingLocationState | undefined
     const serviceIdFromState = stateAny?.serviceId
     if (serviceIdFromState && services && !selectedService) {
-      const found = services.find((s) => s.id === serviceIdFromState)
+      const found = services.find((s) => Number(s.id) === Number(serviceIdFromState))
       if (found) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedService(found)
