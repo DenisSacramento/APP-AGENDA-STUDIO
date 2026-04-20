@@ -13,6 +13,9 @@ const formatCurrency = (value: number) =>
   }).format(value)
 
 export const ServicesPage = () => {
+  const serviceCardClass =
+    'flex h-full min-h-[252px] flex-col items-center rounded-3xl border border-[#ddb1cf] bg-[#f1e6f3] px-5 py-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_14px_rgba(87,52,73,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#d39fbe] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_12px_24px_rgba(87,52,73,0.16)]'
+
   const { data, isLoading } = useQuery({
     queryKey: ['services'],
     queryFn: appointmentService.getServices,
@@ -20,32 +23,28 @@ export const ServicesPage = () => {
 
   return (
     <PageContainer>
-      <h1 className="font-display text-3xl text-rose-900">Servicos</h1>
-      <p className="mt-1 text-sm text-zinc-600">Escolha o servico ideal para voce e reserve em poucos cliques.</p>
+      <h1 className="text-[28px] font-black uppercase tracking-[0.12em] text-[#8e005f] sm:text-[38px]">Serviços</h1>
+      <p className="mt-1 max-w-[640px] text-base leading-relaxed text-[#68607d]">Escolha o serviço ideal para você e reserve em poucos cliques.</p>
 
       {isLoading ? <p className="mt-6 text-sm">Carregando...</p> : null}
 
       {!isLoading && (!data || data.length === 0) ? (
         <Card className="mt-6">
-          <p className="text-sm text-zinc-600">Nenhum servico disponivel no momento.</p>
+          <p className="text-sm text-zinc-600">Nenhum serviço disponível no momento.</p>
         </Card>
       ) : null}
 
       <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {data?.map((service) => (
-          <Card key={service.id} className="flex h-full flex-col justify-between gap-5">
-            <div className="space-y-3">
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="font-display text-xl leading-tight text-rose-900">{service.name}</h2>
-                <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-900">
-                  {service.durationMinutes} min
-                </span>
-              </div>
-              <p className="text-sm text-zinc-600">{service.description}</p>
-              <p className="text-2xl font-semibold text-zinc-900">{formatCurrency(service.price)}</p>
-            </div>
-            <Link to="/booking" className="pt-2">
-              <Button fullWidth>Agendar este servico</Button>
+          <Card key={service.id} className={serviceCardClass}>
+            <h3 className="mt-3 w-full max-w-[240px] text-[17px] font-extrabold uppercase leading-snug tracking-[0.03em] text-[#34263f] [overflow-wrap:anywhere]">
+              {service.name}
+            </h3>
+            <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">{service.description}</p>
+            <p className="mt-auto pt-2 text-sm text-[#7b6481]">{service.durationMinutes} min</p>
+            <p className="mt-2 text-base font-bold text-[#8e005f]">{formatCurrency(Number(service.price))}</p>
+            <Link to={`/booking`} className="pt-2 w-full">
+              <Button fullWidth>Agendar este serviço</Button>
             </Link>
           </Card>
         ))}

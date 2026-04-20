@@ -1,0 +1,281 @@
+[
+  {
+    "id": 1,
+    "name": "Corte Feminino",
+    "description": "Corte moderno com finalizacao personalizada.",
+    "duration_minutes": 60,
+    "price": "120.00",
+    "is_active": 0,
+    "created_at": "2026-04-17T23:15:41.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Escova Modelada",
+    "description": "Escova com acabamento e volume sob medida.",
+    "duration_minutes": 50,
+    "price": "90.00",
+    "is_active": 0,
+    "created_at": "2026-04-17T23:15:41.000Z"
+  },
+  {
+    "id": 3,
+    "name": "Manicure Premium",
+    "description": "Cuidado completo com esmaltação de alta durabilidade.",
+    "duration_minutes": 45,
+    "price": "65.00",
+    "is_active": 0,
+    "created_at": "2026-04-17T23:15:41.000Z"
+  },
+  {
+    "id": 4,
+    "name": "Coloracao",
+    "description": "Coloracao completa com avaliacao profissional.",
+    "duration_minutes": 120,
+    "price": "250.00",
+    "is_active": 0,
+    "created_at": "2026-04-17T23:15:41.000Z"
+  },
+  {
+    "id": 30001,
+    "name": "Corte simples",
+    "description": "Corte simples com acabamento.",
+    "duration_minutes": 45,
+    "price": "35.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:31.000Z"
+  },
+  {
+    "id": 30002,
+    "name": "Corte long bob/Chanel",
+    "description": "Corte long bob ou chanel com finalização.",
+    "duration_minutes": 60,
+    "price": "40.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:31.000Z"
+  },
+  {
+    "id": 30003,
+    "name": "Progressiva P e M",
+    "description": "Progressiva para cabelos de comprimento pequeno e medio.",
+    "duration_minutes": 180,
+    "price": "150.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:32.000Z"
+  },
+  {
+    "id": 30004,
+    "name": "Progressiva G",
+    "description": "Progressiva para cabelos longos e volumosos.",
+    "duration_minutes": 210,
+    "price": "200.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:32.000Z"
+  },
+  {
+    "id": 30005,
+    "name": "Coloracao + hidratacao",
+    "description": "Coloracao com hidratacao para brilho e maciez.",
+    "duration_minutes": 120,
+    "price": "65.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:32.000Z"
+  },
+  {
+    "id": 30006,
+    "name": "Escova simples Mega Hair",
+    "description": "Escova simples para Mega Hair.",
+    "duration_minutes": 60,
+    "price": "70.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:32.000Z"
+  },
+  {
+    "id": 30007,
+    "name": "Escova Mega Hair + hidratacao",
+    "description": "Escova para Mega Hair com hidratacao.",
+    "duration_minutes": 80,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:33.000Z"
+  },
+  {
+    "id": 30008,
+    "name": "Hidroreconstrucao",
+    "description": "Tratamento de hidroreconstrucao.",
+    "duration_minutes": 75,
+    "price": "70.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:33.000Z"
+  },
+  {
+    "id": 30009,
+    "name": "Hidronutricao + finalizacao",
+    "description": "Hidronutricao com finalizacao completa.",
+    "duration_minutes": 75,
+    "price": "70.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:33.000Z"
+  },
+  {
+    "id": 30010,
+    "name": "Escova + hidratacao",
+    "description": "Escova com hidratacao para alinhamento e brilho.",
+    "duration_minutes": 60,
+    "price": "50.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:33.000Z"
+  },
+  {
+    "id": 30011,
+    "name": "Escova simples",
+    "description": "Escova simples com acabamento.",
+    "duration_minutes": 45,
+    "price": "40.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:34.000Z"
+  },
+  {
+    "id": 30012,
+    "name": "Botox a partir de",
+    "description": "Tratamento botox capilar. Valor inicial.",
+    "duration_minutes": 120,
+    "price": "90.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:34.000Z"
+  },
+  {
+    "id": 30013,
+    "name": "Reconstrucao",
+    "description": "Reconstrucao capilar intensiva.",
+    "duration_minutes": 90,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:34.000Z"
+  },
+  {
+    "id": 30014,
+    "name": "Selagem a partir de",
+    "description": "Selagem capilar. Valor inicial.",
+    "duration_minutes": 120,
+    "price": "100.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:35.000Z"
+  },
+  {
+    "id": 30015,
+    "name": "Cristalizacao",
+    "description": "Cristalizacao para brilho e alinhamento.",
+    "duration_minutes": 90,
+    "price": "75.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:35.000Z"
+  },
+  {
+    "id": 30016,
+    "name": "Cauterizacao",
+    "description": "Cauterizacao capilar para reposicao de massa.",
+    "duration_minutes": 90,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:35.000Z"
+  },
+  {
+    "id": 30017,
+    "name": "Cronograma capilar (4 sessoes)",
+    "description": "Pacote com 4 sessoes de cronograma capilar.",
+    "duration_minutes": 240,
+    "price": "200.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:03:35.000Z"
+  },
+  {
+    "id": 30018,
+    "name": "Coloração + hidratação",
+    "description": "Coloração com hidratação para brilho e maciez.",
+    "duration_minutes": 120,
+    "price": "65.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:00.000Z"
+  },
+  {
+    "id": 30019,
+    "name": "Escova Mega Hair + hidratação",
+    "description": "Escova para Mega Hair com hidratação.",
+    "duration_minutes": 80,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:00.000Z"
+  },
+  {
+    "id": 30020,
+    "name": "Hidroreconstrução",
+    "description": "Tratamento de hidroreconstrução.",
+    "duration_minutes": 75,
+    "price": "70.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:00.000Z"
+  },
+  {
+    "id": 30021,
+    "name": "Hidronutrição + finalização",
+    "description": "Hidronutrição com finalização completa.",
+    "duration_minutes": 75,
+    "price": "70.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:00.000Z"
+  },
+  {
+    "id": 30022,
+    "name": "Escova + hidratação",
+    "description": "Escova com hidratação para alinhamento e brilho.",
+    "duration_minutes": 60,
+    "price": "50.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:01.000Z"
+  },
+  {
+    "id": 30023,
+    "name": "Reconstrução",
+    "description": "Reconstrução capilar intensiva.",
+    "duration_minutes": 90,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:01.000Z"
+  },
+  {
+    "id": 30024,
+    "name": "Cristalização",
+    "description": "Cristalização para brilho e alinhamento.",
+    "duration_minutes": 90,
+    "price": "75.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:02.000Z"
+  },
+  {
+    "id": 30025,
+    "name": "Cauterização",
+    "description": "Cauterização capilar para reposicao de massa.",
+    "duration_minutes": 90,
+    "price": "80.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:02.000Z"
+  },
+  {
+    "id": 30026,
+    "name": "Cronograma capilar (4 sessões)",
+    "description": "Pacote com 4 sessões de cronograma capilar.",
+    "duration_minutes": 240,
+    "price": "200.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:20:02.000Z"
+  },
+  {
+    "id": 30027,
+    "name": "Coloracao + hidratação",
+    "description": "Coloracao com hidratação para brilho e maciez.",
+    "duration_minutes": 120,
+    "price": "65.00",
+    "is_active": 1,
+    "created_at": "2026-04-20T04:32:17.000Z"
+  }
+]

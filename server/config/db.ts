@@ -16,7 +16,7 @@ const OFFICIAL_SERVICES = [
   },
   {
     name: 'Progressiva P e M',
-    description: 'Progressiva para cabelos de comprimento pequeno e medio.',
+    description: 'Progressiva para cabelos de comprimento pequeno e médio.',
     durationMinutes: 180,
     price: 150,
   },
@@ -27,8 +27,8 @@ const OFFICIAL_SERVICES = [
     price: 200,
   },
   {
-    name: 'Coloracao + hidratação',
-    description: 'Coloracao com hidratação para brilho e maciez.',
+    name: 'Coloração + hidratação',
+    description: 'Coloração com hidratação para brilho e maciez.',
     durationMinutes: 120,
     price: 65,
   },
@@ -94,13 +94,13 @@ const OFFICIAL_SERVICES = [
   },
   {
     name: 'Cauterização',
-    description: 'Cauterização capilar para reposicao de massa.',
+    description: 'Cauterização capilar para reposição de massa.',
     durationMinutes: 90,
     price: 80,
   },
   {
-    name: 'Cronograma capilar (4 sessoes)',
-    description: 'Pacote com 4 sessoes de cronograma capilar.',
+    name: 'Cronograma capilar (4 sessões)',
+    description: 'Pacote com 4 sessões de cronograma capilar.',
     durationMinutes: 240,
     price: 200,
   },
