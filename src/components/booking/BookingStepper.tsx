@@ -1,8 +1,4 @@
-const labels = [
-  'Serviço',
-  'Data',
-  'Horário',
-]
+import { labels } from './bookingConstants'
 
 export const BookingStepper = ({ step }: { step: number }) => (
   <ol className="grid gap-3 sm:grid-cols-5">

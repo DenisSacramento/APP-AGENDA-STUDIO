@@ -44,7 +44,7 @@ export const BookingPage = () => {
         setStep(2)
       }
     }
-  }, [location.state, services])
+  }, [location.state, services, selectedService])
 
   // If page loaded without a serviceId (and services already fetched), redirect
   // back to services — booking must start from a selected service.
