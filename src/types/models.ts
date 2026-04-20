@@ -40,3 +40,32 @@ export interface AdminAppointment {
   clientEmail: string
   serviceName: string
 }
+
+export interface AdminDashboardSummary {
+  totalUsers: number
+  totalServices: number
+  totalAppointments: number
+}
+
+export interface AdminService {
+  id: number
+  name: string
+  description: string
+  durationMinutes: number
+  price: number
+  isActive: number
+}
+
+export interface AdminServicePayload {
+  name: string
+  description: string
+  durationMinutes: number
+  price: number
+}
+
+export interface AdminUser {
+  id: number
+  name: string
+  email: string
+  role: UserRole
+}

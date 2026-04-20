@@ -7,7 +7,17 @@ import { comparePassword } from '../utils/password.js'
 import { signToken } from '../utils/jwt.js'
 import { loginSchema } from '../validators/auth.validator.js'
 import { updateAppointmentStatusSchema } from '../validators/appointment.validator.js'
+import { updateUserRoleSchema, upsertServiceSchema } from '../validators/admin.validator.js'
 import { listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
+import {
+  createAdminService,
+  deactivateAdminService,
+  getDashboardSummary,
+  listAdminServices,
+  listAdminUsers,
+  updateAdminService,
+  updateAdminUserRole,
+} from '../services/admin.service.js'
 
 export const adminRouter = Router()
 
@@ -48,6 +58,67 @@ adminRouter.get('/appointments', requireAuth, requireAdmin, async (req, res) => 
   const appointments = await listAdminAppointments(date, search)
   return res.json(appointments)
 })
+
+adminRouter.get('/dashboard', requireAuth, requireAdmin, async (_req, res) => {
+  const summary = await getDashboardSummary()
+  return res.json(summary)
+})
+
+adminRouter.get('/services', requireAuth, requireAdmin, async (_req, res) => {
+  const services = await listAdminServices()
+  return res.json(services)
+})
+
+adminRouter.post('/services', requireAuth, requireAdmin, sanitizeBody, validate(upsertServiceSchema), async (req, res) => {
+  const serviceId = await createAdminService(req.body)
+  return res.status(201).json({ id: serviceId, message: 'Servico criado com sucesso' })
+})
+
+adminRouter.put('/services/:id', requireAuth, requireAdmin, sanitizeBody, validate(upsertServiceSchema), async (req, res) => {
+  const serviceId = Number(req.params.id)
+  const updated = await updateAdminService(serviceId, req.body)
+
+  if (!updated) {
+    return res.status(404).json({ message: 'Servico nao encontrado' })
+  }
+
+  return res.json({ message: 'Servico atualizado com sucesso' })
+})
+
+adminRouter.delete('/services/:id', requireAuth, requireAdmin, async (req, res) => {
+  const serviceId = Number(req.params.id)
+  const deleted = await deactivateAdminService(serviceId)
+
+  if (!deleted) {
+    return res.status(404).json({ message: 'Servico nao encontrado' })
+  }
+
+  return res.json({ message: 'Servico removido com sucesso' })
+})
+
+adminRouter.get('/users', requireAuth, requireAdmin, async (_req, res) => {
+  const users = await listAdminUsers()
+  return res.json(users)
+})
+
+adminRouter.patch(
+  '/users/:id/role',
+  requireAuth,
+  requireAdmin,
+  sanitizeBody,
+  validate(updateUserRoleSchema),
+  async (req, res) => {
+    const userId = Number(req.params.id)
+    const { role } = req.body
+
+    const updated = await updateAdminUserRole(userId, role)
+    if (!updated) {
+      return res.status(404).json({ message: 'Usuario nao encontrado' })
+    }
+
+    return res.json({ message: 'Perfil de usuario atualizado com sucesso' })
+  },
+)
 
 adminRouter.patch(
   '/appointments/:id/status',

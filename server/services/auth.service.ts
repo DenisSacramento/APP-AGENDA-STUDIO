@@ -9,6 +9,7 @@ interface DbUser {
   name: string
   email: string
   password_hash: string
+  role: 'client' | 'admin'
 }
 
 export const registerUser = async (name: string, email: string, password: string) => {
@@ -19,16 +20,16 @@ export const registerUser = async (name: string, email: string, password: string
 
   const passwordHash = await hashPassword(password)
   const [result] = await db.query(
-    'INSERT INTO app_users (name, email, password_hash) VALUES (?, ?, ?)',
-    [name, email, passwordHash],
+    'INSERT INTO app_users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
+    [name, email, passwordHash, 'client'],
   )
 
   const userId = (result as { insertId: number }).insertId
-  return { id: userId, name, email }
+  return { id: userId, name, email, role: 'client' as const }
 }
 
 export const loginUser = async (email: string, password: string) => {
-  const [rows] = await db.query('SELECT id, name, email, password_hash FROM app_users WHERE email = ?', [email])
+  const [rows] = await db.query('SELECT id, name, email, password_hash, role FROM app_users WHERE email = ?', [email])
   const user = (rows as DbUser[])[0]
 
   if (!user || !user.password_hash) {
@@ -51,6 +52,7 @@ export const loginUser = async (email: string, password: string) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    role: user.role,
   }
 }
 

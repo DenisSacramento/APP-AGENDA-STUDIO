@@ -24,7 +24,7 @@ authRouter.post('/register', sanitizeBody, validate(registerSchema), async (req,
     const token = signToken({
       sub: String(user.id),
       email: user.email,
-      role: 'client',
+      role: user.role,
       name: user.name,
     })
 
@@ -34,7 +34,7 @@ authRouter.post('/register', sanitizeBody, validate(registerSchema), async (req,
         id: user.id,
         name: user.name,
         email: user.email,
-        role: 'client',
+        role: user.role,
       },
     })
   } catch (error) {
@@ -56,7 +56,7 @@ authRouter.post('/login', sanitizeBody, validate(loginSchema), async (req, res) 
     const token = signToken({
       sub: String(user.id),
       email: user.email,
-      role: 'client',
+      role: user.role,
       name: user.name,
     })
 
@@ -66,7 +66,7 @@ authRouter.post('/login', sanitizeBody, validate(loginSchema), async (req, res) 
         id: user.id,
         name: user.name,
         email: user.email,
-        role: 'client',
+        role: user.role,
       },
     })
   } catch (error) {

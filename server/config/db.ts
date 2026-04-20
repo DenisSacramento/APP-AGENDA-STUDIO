@@ -128,9 +128,24 @@ export const initDatabase = async () => {
       name VARCHAR(120) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       password_hash VARCHAR(255) NOT NULL,
+      role ENUM('client', 'admin') NOT NULL DEFAULT 'client',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `)
+
+  const [roleColumnRows] = await db.query(
+    `
+      SELECT COLUMN_NAME
+        FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = 'app_users'
+         AND COLUMN_NAME = 'role'
+    `,
+  )
+
+  if ((roleColumnRows as Array<{ COLUMN_NAME: string }>).length === 0) {
+    await db.query("ALTER TABLE app_users ADD COLUMN role ENUM('client', 'admin') NOT NULL DEFAULT 'client' AFTER password_hash")
+  }
 
   await db.query(`
     CREATE TABLE IF NOT EXISTS app_services (
@@ -193,14 +208,5 @@ export const initDatabase = async () => {
     }
   }
 
-  const officialNamesPlaceholders = OFFICIAL_SERVICES.map(() => '?').join(', ')
-  await db.query(
-    `
-      UPDATE app_services
-         SET is_active = 0
-       WHERE name NOT IN (${officialNamesPlaceholders})
-    `,
-    OFFICIAL_SERVICES.map((service) => service.name),
-  )
 }
 

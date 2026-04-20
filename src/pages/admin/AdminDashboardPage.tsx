@@ -1,82 +1,282 @@
-import { useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { PageContainer } from '../../components/layout/PageContainer'
+import { useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
+import { AdminSidebar, type AdminSectionId } from '../../components/admin/AdminSidebar'
+import { AdminStatCard } from '../../components/admin/AdminStatCard'
 import { Card } from '../../components/ui/Card'
-import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
+import { Input } from '../../components/ui/Input'
 import { Badge } from '../../components/ui/Badge'
-import { appointmentService } from '../../services/appointment.service'
-import { useAuth } from '../../hooks/useAuth'
-import type { AppointmentStatus } from '../../types/models'
+import { PageContainer } from '../../components/layout/PageContainer'
+import { useAdminDashboard } from '../../hooks/admin/useAdminDashboard'
+import { useAdminServices } from '../../hooks/admin/useAdminServices'
+import { useAdminBookings } from '../../hooks/admin/useAdminBookings'
+import { useAdminUsers } from '../../hooks/admin/useAdminUsers'
+import type { AdminService } from '../../types/models'
+
+const toCurrency = (value: number) =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+  }).format(value)
+
+const defaultServiceForm = {
+  name: '',
+  description: '',
+  durationMinutes: '60',
+  price: '0',
+}
 
 export const AdminDashboardPage = () => {
-  const { token } = useAuth()
-  const [date, setDate] = useState('')
-  const [search, setSearch] = useState('')
-  const queryClient = useQueryClient()
+  const [activeSection, setActiveSection] = useState<AdminSectionId>('dashboard')
+  const [serviceForm, setServiceForm] = useState(defaultServiceForm)
+  const [editingService, setEditingService] = useState<AdminService | null>(null)
+  const [bookingDate, setBookingDate] = useState('')
+  const [bookingSearch, setBookingSearch] = useState('')
 
-  const { data } = useQuery({
-    queryKey: ['admin-appointments', date, search],
-    queryFn: () => appointmentService.getAdminAppointments(token ?? '', date, search),
-    enabled: Boolean(token),
-  })
+  const { data: summary } = useAdminDashboard()
+  const { servicesQuery, createService, updateService, deleteService } = useAdminServices()
+  const { bookingsQuery, updateBookingStatus } = useAdminBookings({ date: bookingDate, search: bookingSearch })
+  const { usersQuery, updateUserRole } = useAdminUsers()
 
-  const statusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: number; status: AppointmentStatus }) =>
-      appointmentService.updateAdminAppointmentStatus(token ?? '', id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-appointments'] })
-    },
-  })
+  const sectionTitle = useMemo(() => {
+    if (activeSection === 'dashboard') return 'Dashboard'
+    if (activeSection === 'services') return 'Gestao de servicos'
+    if (activeSection === 'appointments') return 'Gestao de agendamentos'
+    return 'Gestao de usuarios'
+  }, [activeSection])
+
+  const submitServiceForm = async (event: FormEvent) => {
+    event.preventDefault()
+
+    const payload = {
+      name: serviceForm.name.trim(),
+      description: serviceForm.description.trim(),
+      durationMinutes: Number(serviceForm.durationMinutes),
+      price: Number(serviceForm.price),
+    }
+
+    if (editingService) {
+      await updateService.mutateAsync({ id: editingService.id, payload })
+    } else {
+      await createService.mutateAsync(payload)
+    }
+
+    setServiceForm(defaultServiceForm)
+    setEditingService(null)
+  }
+
+  const startEditService = (service: AdminService) => {
+    setEditingService(service)
+    setServiceForm({
+      name: service.name,
+      description: service.description,
+      durationMinutes: String(service.durationMinutes),
+      price: String(service.price),
+    })
+    setActiveSection('services')
+  }
 
   return (
     <PageContainer>
-      <h1 className="font-display text-3xl text-rose-900">Dashboard admin</h1>
+      <div className="space-y-6">
+        <header className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500">Painel administrativo</p>
+          <h1 className="font-display text-3xl text-rose-900">{sectionTitle}</h1>
+        </header>
 
-      <Card className="mt-6 space-y-4">
-        <div className="grid gap-3 md:grid-cols-3">
-          <Input label="Filtrar por data" type="date" value={date} onChange={(event) => setDate(event.target.value)} />
-          <Input
-            label="Buscar cliente"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Nome ou email"
-          />
-          <div className="flex items-end">
-            <Button variant="ghost" onClick={() => { setDate(''); setSearch('') }}>
-              Limpar filtros
-            </Button>
-          </div>
-        </div>
-      </Card>
+        <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <AdminSidebar active={activeSection} onChange={setActiveSection} />
 
-      <section className="mt-6 grid gap-4">
-        {data?.map((appointment) => (
-          <Card key={appointment.id} className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <h2 className="font-display text-xl text-rose-900">{appointment.clientName}</h2>
-                <p className="text-sm text-zinc-600">{appointment.clientEmail}</p>
-                <p className="text-sm text-zinc-700">
-                  {appointment.serviceName} • {appointment.date} as {appointment.time}
-                </p>
+          <section className="space-y-4">
+            {activeSection === 'dashboard' ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <AdminStatCard title="Total de usuarios" value={summary?.totalUsers ?? 0} />
+                <AdminStatCard title="Total de servicos ativos" value={summary?.totalServices ?? 0} />
+                <AdminStatCard title="Total de agendamentos" value={summary?.totalAppointments ?? 0} />
               </div>
-              <Badge status={appointment.status} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={() => statusMutation.mutate({ id: appointment.id, status: 'confirmado' })}>
-                Confirmar
-              </Button>
-              <Button variant="danger" onClick={() => statusMutation.mutate({ id: appointment.id, status: 'cancelado' })}>
-                Cancelar
-              </Button>
-              <Button variant="secondary" onClick={() => statusMutation.mutate({ id: appointment.id, status: 'pendente' })}>
-                Marcar pendente
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </section>
+            ) : null}
+
+            {activeSection === 'services' ? (
+              <div className="space-y-4">
+                <Card>
+                  <form className="grid gap-3 md:grid-cols-2" onSubmit={submitServiceForm}>
+                    <Input
+                      label="Nome"
+                      value={serviceForm.name}
+                      onChange={(event) => setServiceForm((current) => ({ ...current, name: event.target.value }))}
+                      required
+                    />
+                    <Input
+                      label="Duracao (min)"
+                      type="number"
+                      min={1}
+                      value={serviceForm.durationMinutes}
+                      onChange={(event) => setServiceForm((current) => ({ ...current, durationMinutes: event.target.value }))}
+                      required
+                    />
+                    <label className="md:col-span-2">
+                      <span className="mb-2 block text-sm font-medium text-zinc-700">Descricao</span>
+                      <textarea
+                        className="w-full rounded-2xl border border-rose-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-rose-300"
+                        rows={3}
+                        value={serviceForm.description}
+                        onChange={(event) => setServiceForm((current) => ({ ...current, description: event.target.value }))}
+                        required
+                      />
+                    </label>
+                    <Input
+                      label="Preco (R$)"
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={serviceForm.price}
+                      onChange={(event) => setServiceForm((current) => ({ ...current, price: event.target.value }))}
+                      required
+                    />
+                    <div className="flex items-end gap-2">
+                      <Button type="submit" disabled={createService.isPending || updateService.isPending}>
+                        {editingService ? 'Salvar alteracoes' : 'Criar servico'}
+                      </Button>
+                      {editingService ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => {
+                            setEditingService(null)
+                            setServiceForm(defaultServiceForm)
+                          }}
+                        >
+                          Cancelar edicao
+                        </Button>
+                      ) : null}
+                    </div>
+                  </form>
+                </Card>
+
+                <div className="grid gap-3">
+                  {servicesQuery.data?.map((service) => (
+                    <Card key={service.id} className="space-y-3">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-display text-xl text-rose-900">{service.name}</h3>
+                          <p className="text-sm text-zinc-600">{service.description}</p>
+                          <p className="mt-1 text-sm text-zinc-700">
+                            {service.durationMinutes} min • {toCurrency(Number(service.price))}
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600">
+                          {service.isActive ? 'Ativo' : 'Inativo'}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button variant="secondary" onClick={() => startEditService(service)}>
+                          Editar
+                        </Button>
+                        <Button
+                          variant="danger"
+                          disabled={deleteService.isPending || service.isActive === 0}
+                          onClick={() => {
+                            if (window.confirm(`Deseja remover o servico "${service.name}"?`)) {
+                              deleteService.mutate(service.id)
+                            }
+                          }}
+                        >
+                          Deletar
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {activeSection === 'appointments' ? (
+              <div className="space-y-4">
+                <Card>
+                  <div className="grid gap-3 md:grid-cols-3">
+                    <Input label="Filtrar por data" type="date" value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} />
+                    <Input
+                      label="Buscar cliente"
+                      value={bookingSearch}
+                      placeholder="Nome ou email"
+                      onChange={(event) => setBookingSearch(event.target.value)}
+                    />
+                    <div className="flex items-end">
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          setBookingDate('')
+                          setBookingSearch('')
+                        }}
+                      >
+                        Limpar filtros
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                <div className="grid gap-3">
+                  {bookingsQuery.data?.map((appointment) => (
+                    <Card key={appointment.id} className="space-y-3">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                          <h3 className="font-display text-xl text-rose-900">{appointment.clientName}</h3>
+                          <p className="text-sm text-zinc-600">{appointment.clientEmail}</p>
+                          <p className="text-sm text-zinc-700">
+                            {appointment.serviceName} • {appointment.date} as {appointment.time}
+                          </p>
+                        </div>
+                        <Badge status={appointment.status} />
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm text-zinc-700">Atualizar status:</span>
+                        <select
+                          className="rounded-xl border border-rose-100 bg-white px-3 py-2 text-sm"
+                          value={appointment.status}
+                          onChange={(event) =>
+                            updateBookingStatus.mutate({
+                              id: appointment.id,
+                              status: event.target.value as 'pendente' | 'confirmado' | 'cancelado',
+                            })
+                          }
+                        >
+                          <option value="pendente">Pendente</option>
+                          <option value="confirmado">Confirmado</option>
+                          <option value="cancelado">Cancelado</option>
+                        </select>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {activeSection === 'users' ? (
+              <div className="grid gap-3">
+                {usersQuery.data?.map((user) => (
+                  <Card key={user.id} className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="font-display text-xl text-rose-900">{user.name}</h3>
+                      <p className="text-sm text-zinc-600">{user.email}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                        Perfil: {user.role === 'admin' ? 'Admin' : 'Comum'}
+                      </p>
+                    </div>
+                    <Button
+                      variant={user.role === 'admin' ? 'ghost' : 'secondary'}
+                      disabled={updateUserRole.isPending}
+                      onClick={() => updateUserRole.mutate({ id: user.id, role: user.role === 'admin' ? 'client' : 'admin' })}
+                    >
+                      {user.role === 'admin' ? 'Remover admin' : 'Tornar admin'}
+                    </Button>
+                  </Card>
+                ))}
+              </div>
+            ) : null}
+          </section>
+        </div>
+      </div>
     </PageContainer>
   )
 }

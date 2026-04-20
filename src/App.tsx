@@ -57,6 +57,14 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <Navigate to="/admin/dashboard" replace />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Route>
