@@ -31,11 +31,18 @@ export const loginUser = async (email: string, password: string) => {
   const [rows] = await db.query('SELECT id, name, email, password_hash FROM app_users WHERE email = ?', [email])
   const user = (rows as DbUser[])[0]
 
-  if (!user) {
+  if (!user || !user.password_hash) {
     throw new Error('INVALID_CREDENTIALS')
   }
 
-  const isPasswordValid = await comparePassword(password, user.password_hash)
+  let isPasswordValid = false
+  try {
+    isPasswordValid = await comparePassword(password, user.password_hash)
+  } catch (err) {
+    // Se comparePassword lançar por dados inválidos, tratamos como credenciais inválidas
+    throw new Error('INVALID_CREDENTIALS')
+  }
+
   if (!isPasswordValid) {
     throw new Error('INVALID_CREDENTIALS')
   }

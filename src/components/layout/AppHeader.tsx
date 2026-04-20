@@ -22,9 +22,6 @@ export const AppHeader = () => {
           <NavLink className={navItemClass} to="/services">
             <Scissors size={17} /> Serviços
           </NavLink>
-          <NavLink className={navItemClass} to="/booking">
-            <CalendarDays size={17} /> Agendar
-          </NavLink>
           <NavLink className={navItemClass} to="/offers">
             <Gift size={17} /> Ofertas
           </NavLink>

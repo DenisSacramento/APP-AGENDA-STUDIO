@@ -24,21 +24,7 @@ export const HomePage = () => {
             Aqui nós não cuidamos somente da estética, cuidamos de pessoas, devolvendo autoestima, dignidade e alegria. Você é tratada
             com respeito, honestidade e amor.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
-            <Link to="/booking">
-              <Button className="inline-flex items-center gap-2 bg-[#dbbe64] px-6 py-2.5 text-base font-bold text-[#2f1f05] shadow-[inset_0_1px_0_rgba(255,246,214,0.7),0_8px_18px_rgba(112,89,20,0.28),0_2px_5px_rgba(90,70,14,0.2)] transition duration-300 hover:-translate-y-0.5 hover:!bg-[#cfae4f] hover:!text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.62),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]">
-                <CalendarDays size={16} /> Agendar Horário
-              </Button>
-            </Link>
-            <Link to="/services">
-              <Button
-                variant="ghost"
-                className="inline-flex items-center gap-2 border border-[#d36bad] bg-transparent px-6 py-2.5 text-base font-bold text-[#9a126f] shadow-[inset_0_1px_0_rgba(255,255,255,0.78),0_8px_18px_rgba(56,31,46,0.18),0_2px_5px_rgba(39,23,31,0.14)] transition duration-300 hover:-translate-y-0.5 hover:!border-[#cfae4f] hover:!bg-[#cfae4f] hover:!text-[#2a1a04] hover:shadow-[inset_0_1px_0_rgba(255,246,214,0.58),0_14px_28px_rgba(109,82,24,0.34),0_4px_10px_rgba(90,70,14,0.24)]"
-              >
-                <Scissors size={16} /> Ver Serviços
-              </Button>
-            </Link>
-          </div>
+          {/* CTA removido: acesso aos serviços disponível no menu e na seção 'Ver todos os serviços' */}
         </div>
       </section>
 

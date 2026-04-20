@@ -1,9 +1,7 @@
 const labels = [
-  'Servico',
+  'Serviço',
   'Data',
-  'Horario',
-  'Confirmacao',
-  'Finalizar',
+  'Horário',
 ]
 
 export const BookingStepper = ({ step }: { step: number }) => (

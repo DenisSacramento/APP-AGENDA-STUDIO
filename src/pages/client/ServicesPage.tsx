@@ -43,7 +43,7 @@ export const ServicesPage = () => {
             <p className="mt-1 max-w-[240px] text-sm leading-relaxed text-[#6c5574]">{service.description}</p>
             <p className="mt-auto pt-2 text-sm text-[#7b6481]">{service.durationMinutes} min</p>
             <p className="mt-2 text-base font-bold text-[#8e005f]">{formatCurrency(Number(service.price))}</p>
-            <Link to={`/booking`} className="pt-2 w-full">
+            <Link to="/booking" state={{ serviceId: service.id }} className="pt-2 w-full">
               <Button fullWidth>Agendar este serviço</Button>
             </Link>
           </Card>

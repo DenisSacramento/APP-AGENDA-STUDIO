@@ -73,6 +73,7 @@ authRouter.post('/login', sanitizeBody, validate(loginSchema), async (req, res) 
     if (error instanceof Error && error.message === 'INVALID_CREDENTIALS') {
       return res.status(401).json({ message: 'Credenciais invalidas' })
     }
+    console.error('Login error:', error)
 
     return res.status(500).json({ message: 'Falha no login' })
   }
