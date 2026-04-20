@@ -40,10 +40,10 @@ export const AdminDashboardPage = () => {
   const { usersQuery, updateUserRole } = useAdminUsers()
 
   const sectionTitle = useMemo(() => {
-    if (activeSection === 'dashboard') return 'Dashboard'
-    if (activeSection === 'services') return 'Gestao de servicos'
-    if (activeSection === 'appointments') return 'Gestao de agendamentos'
-    return 'Gestao de usuarios'
+    if (activeSection === 'dashboard') return 'Controle de agendas'
+    if (activeSection === 'services') return 'Gestão de serviços'
+    if (activeSection === 'appointments') return 'Gestão de agendamentos'
+    return 'Gestão de usuários'
   }, [activeSection])
 
   const submitServiceForm = async (event: FormEvent) => {
@@ -82,7 +82,7 @@ export const AdminDashboardPage = () => {
       <div className="space-y-6">
         <header className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500">Painel administrativo</p>
-          <h1 className="font-display text-3xl text-rose-900">{sectionTitle}</h1>
+          <h2 className="mt-3 text-[24px] font-black uppercase tracking-[0.12em] text-[#8e005f] sm:text-[32px]">{sectionTitle}</h2>
         </header>
 
         <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
@@ -91,8 +91,8 @@ export const AdminDashboardPage = () => {
           <section className="space-y-4">
             {activeSection === 'dashboard' ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <AdminStatCard title="Total de usuarios" value={summary?.totalUsers ?? 0} />
-                <AdminStatCard title="Total de servicos ativos" value={summary?.totalServices ?? 0} />
+                <AdminStatCard title="Total de usuários" value={summary?.totalUsers ?? 0} />
+                <AdminStatCard title="Total de serviços ativos" value={summary?.totalServices ?? 0} />
                 <AdminStatCard title="Total de agendamentos" value={summary?.totalAppointments ?? 0} />
               </div>
             ) : null}
@@ -108,7 +108,7 @@ export const AdminDashboardPage = () => {
                       required
                     />
                     <Input
-                      label="Duracao (min)"
+                      label="Duração (min)"
                       type="number"
                       min={1}
                       value={serviceForm.durationMinutes}
@@ -116,7 +116,7 @@ export const AdminDashboardPage = () => {
                       required
                     />
                     <label className="md:col-span-2">
-                      <span className="mb-2 block text-sm font-medium text-zinc-700">Descricao</span>
+                      <span className="mb-2 block text-sm font-medium text-zinc-700">Descrição</span>
                       <textarea
                         className="w-full rounded-2xl border border-rose-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-rose-300"
                         rows={3}
@@ -126,7 +126,7 @@ export const AdminDashboardPage = () => {
                       />
                     </label>
                     <Input
-                      label="Preco (R$)"
+                      label="Preço (R$)"
                       type="number"
                       min={0}
                       step="0.01"
@@ -136,7 +136,7 @@ export const AdminDashboardPage = () => {
                     />
                     <div className="flex items-end gap-2">
                       <Button type="submit" disabled={createService.isPending || updateService.isPending}>
-                        {editingService ? 'Salvar alteracoes' : 'Criar servico'}
+                        {editingService ? 'Salvar alterações' : 'Criar serviço'}
                       </Button>
                       {editingService ? (
                         <Button
@@ -147,7 +147,7 @@ export const AdminDashboardPage = () => {
                             setServiceForm(defaultServiceForm)
                           }}
                         >
-                          Cancelar edicao
+                          Cancelar edição
                         </Button>
                       ) : null}
                     </div>

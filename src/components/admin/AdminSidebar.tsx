@@ -9,13 +9,13 @@ interface AdminSidebarProps {
 
 const sections: Array<{ id: AdminSectionId; label: string }> = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'services', label: 'Servicos' },
+  { id: 'services', label: 'Serviços' },
   { id: 'appointments', label: 'Agendamentos' },
-  { id: 'users', label: 'Usuarios' },
+  { id: 'users', label: 'Usuários' },
 ]
 
 export const AdminSidebar = ({ active, onChange }: AdminSidebarProps) => (
-  <aside className="rounded-3xl border border-rose-100 bg-white/85 p-3 shadow-sm">
+  <aside className="rounded-3xl border border-[#ddb1cf] bg-[#f1e6f3] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_8px_18px_rgba(87,52,73,0.08)] sm:p-6">
     <nav className="flex gap-2 overflow-x-auto lg:flex-col">
       {sections.map((section) => (
         <button
