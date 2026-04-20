@@ -85,7 +85,7 @@ export const AdminDashboardPage = () => {
           <h2 className="mt-3 text-[24px] font-black uppercase tracking-[0.12em] text-[#8e005f] sm:text-[32px]">{sectionTitle}</h2>
         </header>
 
-        <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
+        <div className="grid gap-4 md:grid-cols-[240px_minmax(0,1fr)]">
           <AdminSidebar active={activeSection} onChange={setActiveSection} />
 
           <section className="space-y-4">
