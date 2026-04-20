@@ -1,6 +1,111 @@
 import mysql from 'mysql2/promise'
 import { env } from './env.js'
 
+const OFFICIAL_SERVICES = [
+  {
+    name: 'Corte simples',
+    description: 'Corte simples com acabamento.',
+    durationMinutes: 45,
+    price: 35,
+  },
+  {
+    name: 'Corte long bob/Chanel',
+    description: 'Corte long bob ou chanel com finalização.',
+    durationMinutes: 60,
+    price: 40,
+  },
+  {
+    name: 'Progressiva P e M',
+    description: 'Progressiva para cabelos de comprimento pequeno e medio.',
+    durationMinutes: 180,
+    price: 150,
+  },
+  {
+    name: 'Progressiva G',
+    description: 'Progressiva para cabelos longos e volumosos.',
+    durationMinutes: 210,
+    price: 200,
+  },
+  {
+    name: 'Coloracao + hidratação',
+    description: 'Coloracao com hidratação para brilho e maciez.',
+    durationMinutes: 120,
+    price: 65,
+  },
+  {
+    name: 'Escova simples Mega Hair',
+    description: 'Escova simples para Mega Hair.',
+    durationMinutes: 60,
+    price: 70,
+  },
+  {
+    name: 'Escova Mega Hair + hidratação',
+    description: 'Escova para Mega Hair com hidratação.',
+    durationMinutes: 80,
+    price: 80,
+  },
+  {
+    name: 'Hidroreconstrução',
+    description: 'Tratamento de hidroreconstrução.',
+    durationMinutes: 75,
+    price: 70,
+  },
+  {
+    name: 'Hidronutrição + finalização',
+    description: 'Hidronutrição com finalização completa.',
+    durationMinutes: 75,
+    price: 70,
+  },
+  {
+    name: 'Escova + hidratação',
+    description: 'Escova com hidratação para alinhamento e brilho.',
+    durationMinutes: 60,
+    price: 50,
+  },
+  {
+    name: 'Escova simples',
+    description: 'Escova simples com acabamento.',
+    durationMinutes: 45,
+    price: 40,
+  },
+  {
+    name: 'Botox a partir de',
+    description: 'Tratamento botox capilar. Valor inicial.',
+    durationMinutes: 120,
+    price: 90,
+  },
+  {
+    name: 'Reconstrução',
+    description: 'Reconstrução capilar intensiva.',
+    durationMinutes: 90,
+    price: 80,
+  },
+  {
+    name: 'Selagem a partir de',
+    description: 'Selagem capilar. Valor inicial.',
+    durationMinutes: 120,
+    price: 100,
+  },
+  {
+    name: 'Cristalização',
+    description: 'Cristalização para brilho e alinhamento.',
+    durationMinutes: 90,
+    price: 75,
+  },
+  {
+    name: 'Cauterização',
+    description: 'Cauterização capilar para reposicao de massa.',
+    durationMinutes: 90,
+    price: 80,
+  },
+  {
+    name: 'Cronograma capilar (4 sessoes)',
+    description: 'Pacote com 4 sessoes de cronograma capilar.',
+    durationMinutes: 240,
+    price: 200,
+  },
+] as const
+
 export const db = mysql.createPool({
   host: env.tidbHost,
   port: env.tidbPort,
@@ -67,20 +172,35 @@ export const initDatabase = async () => {
     )
   `)
 
-  const [serviceCountRows] = await db.query('SELECT COUNT(*) AS total FROM app_services')
-  const totalServices = Number((serviceCountRows as Array<{ total: number }>)[0]?.total ?? 0)
-
-  if (totalServices === 0) {
-    await db.query(
+  for (const service of OFFICIAL_SERVICES) {
+    const [updateResult] = await db.query(
       `
-        INSERT INTO app_services (name, description, duration_minutes, price)
-        VALUES
-          ('Corte Feminino', 'Corte moderno com finalizacao personalizada.', 60, 120.00),
-          ('Escova Modelada', 'Escova com acabamento e volume sob medida.', 50, 90.00),
-          ('Manicure Premium', 'Cuidado completo com esmaltacao de alta durabilidade.', 45, 65.00),
-          ('Coloracao', 'Coloracao completa com avaliacao profissional.', 120, 250.00)
+        UPDATE app_services
+           SET description = ?, duration_minutes = ?, price = ?, is_active = 1
+         WHERE name = ?
       `,
+      [service.description, service.durationMinutes, service.price, service.name],
     )
+
+    if ((updateResult as { affectedRows: number }).affectedRows === 0) {
+      await db.query(
+        `
+          INSERT INTO app_services (name, description, duration_minutes, price, is_active)
+          VALUES (?, ?, ?, ?, 1)
+        `,
+        [service.name, service.description, service.durationMinutes, service.price],
+      )
+    }
   }
+
+  const officialNamesPlaceholders = OFFICIAL_SERVICES.map(() => '?').join(', ')
+  await db.query(
+    `
+      UPDATE app_services
+         SET is_active = 0
+       WHERE name NOT IN (${officialNamesPlaceholders})
+    `,
+    OFFICIAL_SERVICES.map((service) => service.name),
+  )
 }
 

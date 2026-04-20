@@ -1,8 +1,34 @@
 import { db } from '../config/db.js'
 
+const OFFICIAL_SERVICE_NAMES = [
+  'Corte simples',
+  'Corte long bob/Chanel',
+  'Progressiva P e M',
+  'Progressiva G',
+  'Coloracao + hidratacao',
+  'Escova simples Mega Hair',
+  'Escova Mega Hair + hidratacao',
+  'Hidroreconstrucao',
+  'Hidronutricao + finalizacao',
+  'Escova + hidratacao',
+  'Escova simples',
+  'Botox a partir de',
+  'Reconstrucao',
+  'Selagem a partir de',
+  'Cristalizacao',
+  'Cauterizacao',
+  'Cronograma capilar (4 sessoes)',
+] as const
+
 export const listServices = async () => {
+  const officialNamesPlaceholders = OFFICIAL_SERVICE_NAMES.map(() => '?').join(', ')
   const [rows] = await db.query(
-    'SELECT id, name, description, duration_minutes AS durationMinutes, price FROM app_services WHERE is_active = 1 ORDER BY name',
+    `SELECT id, name, description, duration_minutes AS durationMinutes, price
+       FROM app_services
+      WHERE is_active = 1
+        AND name IN (${officialNamesPlaceholders})
+      ORDER BY FIELD(name, ${officialNamesPlaceholders})`,
+    [...OFFICIAL_SERVICE_NAMES, ...OFFICIAL_SERVICE_NAMES],
   )
   return rows as Array<{
     id: number
@@ -46,9 +72,15 @@ export const createAppointment = async (
   try {
     await conn.beginTransaction()
 
-    const [serviceRows] = await conn.query('SELECT id FROM app_services WHERE id = ? AND is_active = 1', [
-      serviceId,
-    ])
+    const officialNamesPlaceholders = OFFICIAL_SERVICE_NAMES.map(() => '?').join(', ')
+    const [serviceRows] = await conn.query(
+      `SELECT id
+         FROM app_services
+        WHERE id = ?
+          AND is_active = 1
+          AND name IN (${officialNamesPlaceholders})`,
+      [serviceId, ...OFFICIAL_SERVICE_NAMES],
+    )
     if ((serviceRows as Array<{ id: number }>).length === 0) {
       throw new Error('SERVICE_NOT_FOUND')
     }

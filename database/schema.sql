@@ -45,10 +45,23 @@ CREATE TABLE IF NOT EXISTS password_resets (
 
 INSERT INTO services (name, description, duration_minutes, price)
 VALUES
-  ('Corte Feminino', 'Corte moderno com finalizacao personalizada.', 60, 120.00),
-  ('Escova Modelada', 'Escova com acabamento e volume sob medida.', 50, 90.00),
-  ('Manicure Premium', 'Cuidado completo com esmaltação de alta durabilidade.', 45, 65.00),
-  ('Coloracao', 'Coloracao completa com avaliacao profissional.', 120, 250.00)
+  ('Corte simples', 'Corte simples com acabamento.', 45, 35.00),
+  ('Corte long bob/Chanel', 'Corte long bob ou chanel com finalizacao.', 60, 40.00),
+  ('Progressiva P e M', 'Progressiva para cabelos de comprimento pequeno e medio.', 180, 150.00),
+  ('Progressiva G', 'Progressiva para cabelos longos e volumosos.', 210, 200.00),
+  ('Coloracao + hidratacao', 'Coloracao com hidratacao para brilho e maciez.', 120, 65.00),
+  ('Escova simples Mega Hair', 'Escova simples para Mega Hair.', 60, 70.00),
+  ('Escova Mega Hair + hidratacao', 'Escova para Mega Hair com hidratacao.', 80, 80.00),
+  ('Hidroreconstrucao', 'Tratamento de hidroreconstrucao.', 75, 70.00),
+  ('Hidronutricao + finalizacao', 'Hidronutricao com finalizacao completa.', 75, 70.00),
+  ('Escova + hidratacao', 'Escova com hidratacao para alinhamento e brilho.', 60, 50.00),
+  ('Escova simples', 'Escova simples com acabamento.', 45, 40.00),
+  ('Botox a partir de', 'Tratamento botox capilar. Valor inicial.', 120, 90.00),
+  ('Reconstrucao', 'Reconstrucao capilar intensiva.', 90, 80.00),
+  ('Selagem a partir de', 'Selagem capilar. Valor inicial.', 120, 100.00),
+  ('Cristalizacao', 'Cristalizacao para brilho e alinhamento.', 90, 75.00),
+  ('Cauterizacao', 'Cauterizacao capilar para reposicao de massa.', 90, 80.00),
+  ('Cronograma capilar (4 sessoes)', 'Pacote com 4 sessoes de cronograma capilar.', 240, 200.00)
 ON DUPLICATE KEY UPDATE
   description = VALUES(description),
   duration_minutes = VALUES(duration_minutes),
