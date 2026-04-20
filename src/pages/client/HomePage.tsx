@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CalendarDays, Clock3, Droplets, Heart, MapPin, MessageCircle, Palette, Scissors, Sparkles, Star } from 'lucide-react'
+import { Clock3, Droplets, Heart, MapPin, MessageCircle, Palette, Scissors, Sparkles, Star } from 'lucide-react'
 import { PageContainer } from '../../components/layout/PageContainer'
 import { Button } from '../../components/ui/Button'
 

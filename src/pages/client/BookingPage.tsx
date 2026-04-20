@@ -34,11 +34,12 @@ export const BookingPage = () => {
 
   // If a serviceId is passed via location.state (from ServicesPage), preselect and jump to date step
   useEffect(() => {
-    const stateAny = location.state as any
+    const stateAny = location.state as { serviceId?: string } | undefined
     const serviceIdFromState = stateAny?.serviceId
     if (serviceIdFromState && services && !selectedService) {
       const found = services.find((s) => s.id === serviceIdFromState)
       if (found) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedService(found)
         setStep(2)
       }
@@ -48,7 +49,7 @@ export const BookingPage = () => {
   // If page loaded without a serviceId (and services already fetched), redirect
   // back to services — booking must start from a selected service.
   useEffect(() => {
-    const stateAny = location.state as any
+    const stateAny = location.state as { serviceId?: string } | undefined
     const serviceIdFromState = stateAny?.serviceId
     if (!services) return
     if (!serviceIdFromState && !selectedService) {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { CalendarDays, ChevronDown, Gift, Scissors } from 'lucide-react'
+import { ChevronDown, Gift, Scissors } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../ui/Button'
 

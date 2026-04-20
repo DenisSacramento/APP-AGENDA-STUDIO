@@ -38,7 +38,7 @@ export const loginUser = async (email: string, password: string) => {
   let isPasswordValid = false
   try {
     isPasswordValid = await comparePassword(password, user.password_hash)
-  } catch (err) {
+  } catch {
     // Se comparePassword lançar por dados inválidos, tratamos como credenciais inválidas
     throw new Error('INVALID_CREDENTIALS')
   }
