@@ -8,11 +8,28 @@ import { appointmentRouter } from './routes/appointments.routes.js'
 import { adminRouter } from './routes/admin.routes.js'
 
 export const app = express()
+const allowedOrigins = new Set(env.frontendUrls)
+const isAllowedOrigin = (origin?: string) => {
+  if (!origin) {
+    return true
+  }
+
+  if (allowedOrigins.has(origin)) {
+    return true
+  }
+
+  try {
+    const { hostname, protocol } = new URL(origin)
+    return protocol === 'https:' && hostname.endsWith('.vercel.app')
+  } catch {
+    return false
+  }
+}
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || env.frontendUrls.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true)
         return
       }
