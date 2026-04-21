@@ -79,16 +79,18 @@ export const AdminDashboardPage = () => {
 
   return (
     <PageContainer>
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
         <header className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500">Painel administrativo</p>
-          <h2 className="mt-3 text-[24px] font-black uppercase tracking-[0.12em] text-[#8e005f] sm:text-[32px]">{sectionTitle}</h2>
+          <h2 className="mt-2 text-[21px] font-black uppercase tracking-[0.08em] text-[#8e005f] sm:mt-3 sm:text-[32px] sm:tracking-[0.12em]">
+            {sectionTitle}
+          </h2>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-[200px_minmax(0,1fr)]">
+        <div className="grid gap-4 lg:grid-cols-[224px_minmax(0,1fr)]">
           <AdminSidebar active={activeSection} onChange={setActiveSection} />
 
-          <section className="space-y-4">
+          <section className="min-w-0 space-y-4">
             {activeSection === 'dashboard' ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <AdminStatCard title="Total de usuários" value={summary?.totalUsers ?? 0} />
@@ -134,14 +136,15 @@ export const AdminDashboardPage = () => {
                       onChange={(event) => setServiceForm((current) => ({ ...current, price: event.target.value }))}
                       required
                     />
-                    <div className="flex items-end gap-2">
-                      <Button type="submit" disabled={createService.isPending || updateService.isPending}>
+                    <div className="flex flex-wrap items-end gap-2 md:col-span-2">
+                      <Button className="w-full sm:w-auto" type="submit" disabled={createService.isPending || updateService.isPending}>
                         {editingService ? 'Salvar alterações' : 'Criar serviço'}
                       </Button>
                       {editingService ? (
                         <Button
                           type="button"
                           variant="ghost"
+                          className="w-full sm:w-auto"
                           onClick={() => {
                             setEditingService(null)
                             setServiceForm(defaultServiceForm)
@@ -158,9 +161,9 @@ export const AdminDashboardPage = () => {
                   {servicesQuery.data?.map((service) => (
                     <Card key={service.id} className="space-y-3">
                       <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
+                        <div className="min-w-0">
                           <h3 className="font-display text-xl text-rose-900">{service.name}</h3>
-                          <p className="text-sm text-zinc-600">{service.description}</p>
+                          <p className="break-words text-sm text-zinc-600">{service.description}</p>
                           <p className="mt-1 text-sm text-zinc-700">
                             {service.durationMinutes} min • {toCurrency(Number(service.price))}
                           </p>
@@ -220,9 +223,9 @@ export const AdminDashboardPage = () => {
                   {bookingsQuery.data?.map((appointment) => (
                     <Card key={appointment.id} className="space-y-3">
                       <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div>
+                        <div className="min-w-0">
                           <h3 className="font-display text-xl text-rose-900">{appointment.clientName}</h3>
-                          <p className="text-sm text-zinc-600">{appointment.clientEmail}</p>
+                          <p className="break-all text-sm text-zinc-600">{appointment.clientEmail}</p>
                           <p className="text-sm text-zinc-700">
                             {appointment.serviceName} • {appointment.date} as {appointment.time}
                           </p>
@@ -232,7 +235,7 @@ export const AdminDashboardPage = () => {
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-sm text-zinc-700">Atualizar status:</span>
                         <select
-                          className="rounded-xl border border-rose-100 bg-white px-3 py-2 text-sm"
+                          className="w-full rounded-xl border border-rose-100 bg-white px-3 py-2 text-sm sm:w-auto"
                           value={appointment.status}
                           onChange={(event) =>
                             updateBookingStatus.mutate({
@@ -256,15 +259,16 @@ export const AdminDashboardPage = () => {
               <div className="grid gap-3">
                 {usersQuery.data?.map((user) => (
                   <Card key={user.id} className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="font-display text-xl text-rose-900">{user.name}</h3>
-                      <p className="text-sm text-zinc-600">{user.email}</p>
+                      <p className="break-all text-sm text-zinc-600">{user.email}</p>
                       <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                         Perfil: {user.role === 'admin' ? 'Admin' : 'Comum'}
                       </p>
                     </div>
                     <Button
                       variant={user.role === 'admin' ? 'ghost' : 'secondary'}
+                      className="w-full sm:w-auto"
                       disabled={updateUserRole.isPending}
                       onClick={() => updateUserRole.mutate({ id: user.id, role: user.role === 'admin' ? 'client' : 'admin' })}
                     >
