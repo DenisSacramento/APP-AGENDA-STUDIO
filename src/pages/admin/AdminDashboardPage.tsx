@@ -159,10 +159,10 @@ export const AdminDashboardPage = () => {
 
                 <div className="grid gap-3">
                   {servicesQuery.data?.map((service) => (
-                    <Card key={service.id} className="space-y-3">
+                    <Card key={service.id} className="w-full max-w-full space-y-3 overflow-hidden">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="font-display text-xl text-rose-900">{service.name}</h3>
+                          <h3 className="break-words font-display text-xl text-rose-900">{service.name}</h3>
                           <p className="break-words text-sm text-zinc-600">{service.description}</p>
                           <p className="mt-1 text-sm text-zinc-700">
                             {service.durationMinutes} min • {toCurrency(Number(service.price))}
@@ -173,10 +173,11 @@ export const AdminDashboardPage = () => {
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <Button variant="secondary" onClick={() => startEditService(service)}>
+                        <Button className="w-full sm:w-auto" variant="secondary" onClick={() => startEditService(service)}>
                           Editar
                         </Button>
                         <Button
+                          className="w-full sm:w-auto"
                           variant="danger"
                           disabled={deleteService.isPending || service.isActive === 0}
                           onClick={() => {
@@ -221,16 +222,18 @@ export const AdminDashboardPage = () => {
 
                 <div className="grid gap-3">
                   {bookingsQuery.data?.map((appointment) => (
-                    <Card key={appointment.id} className="space-y-3">
+                    <Card key={appointment.id} className="w-full max-w-full space-y-3 overflow-hidden">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <h3 className="font-display text-xl text-rose-900">{appointment.clientName}</h3>
+                          <h3 className="break-words font-display text-xl text-rose-900">{appointment.clientName}</h3>
                           <p className="break-all text-sm text-zinc-600">{appointment.clientEmail}</p>
-                          <p className="text-sm text-zinc-700">
+                          <p className="break-words text-sm text-zinc-700">
                             {appointment.serviceName} • {appointment.date} as {appointment.time}
                           </p>
                         </div>
-                        <Badge status={appointment.status} />
+                        <div className="shrink-0">
+                          <Badge status={appointment.status} />
+                        </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-sm text-zinc-700">Atualizar status:</span>
@@ -258,9 +261,9 @@ export const AdminDashboardPage = () => {
             {activeSection === 'users' ? (
               <div className="grid gap-3">
                 {usersQuery.data?.map((user) => (
-                  <Card key={user.id} className="flex flex-wrap items-center justify-between gap-3">
+                  <Card key={user.id} className="flex w-full max-w-full flex-wrap items-center justify-between gap-3 overflow-hidden">
                     <div className="min-w-0">
-                      <h3 className="font-display text-xl text-rose-900">{user.name}</h3>
+                      <h3 className="break-words font-display text-xl text-rose-900">{user.name}</h3>
                       <p className="break-all text-sm text-zinc-600">{user.email}</p>
                       <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                         Perfil: {user.role === 'admin' ? 'Admin' : 'Comum'}
