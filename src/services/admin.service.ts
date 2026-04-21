@@ -50,4 +50,10 @@ export const adminService = {
       body: { role },
       token,
     }),
+
+  deleteUser: (token: string, userId: number) =>
+    request<{ message: string }>(`/admin/users/${userId}/delete`, {
+      method: 'POST',
+      token,
+    }),
 }

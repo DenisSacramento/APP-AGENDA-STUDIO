@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import type { Request, Response } from 'express'
 import { env } from '../config/env.js'
 import { requireAdmin, requireAuth } from '../middleware/auth.js'
 import { sanitizeBody } from '../middleware/sanitize.js'
@@ -11,7 +12,9 @@ import { updateUserRoleSchema, upsertServiceSchema } from '../validators/admin.v
 import { listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
 import {
   createAdminService,
+  deleteAdminUser,
   deactivateAdminService,
+  getAdminUserById,
   getDashboardSummary,
   listAdminServices,
   listAdminUsers,
@@ -119,6 +122,42 @@ adminRouter.patch(
     return res.json({ message: 'Perfil de usuario atualizado com sucesso' })
   },
 )
+
+const handleDeleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.id)
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(400).json({ message: 'ID de usuario invalido' })
+    }
+
+    if (Number(req.user?.sub ?? 0) === userId) {
+      return res.status(400).json({ message: 'Nao e permitido excluir o proprio usuario admin' })
+    }
+
+    const targetUser = await getAdminUserById(userId)
+    if (!targetUser) {
+      return res.status(404).json({ message: 'Usuario nao encontrado' })
+    }
+
+    if (targetUser.role === 'admin') {
+      return res.status(400).json({ message: 'Nao e permitido excluir usuarios administradores' })
+    }
+
+    const result = await deleteAdminUser(userId)
+    if (!result.deleted) {
+      return res.status(404).json({ message: 'Usuario nao encontrado' })
+    }
+
+    return res.json({ message: 'Usuario excluido com sucesso' })
+  } catch (error) {
+    console.error('Erro ao excluir usuario:', error)
+    return res.status(500).json({ message: 'Erro ao excluir usuario' })
+  }
+}
+
+adminRouter.delete('/users/:id', requireAuth, requireAdmin, handleDeleteUser)
+adminRouter.post('/users/:id/delete', requireAuth, requireAdmin, handleDeleteUser)
 
 adminRouter.patch(
   '/appointments/:id/status',

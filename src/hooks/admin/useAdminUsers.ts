@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { UserRole } from '../../types/models'
 import { useAuth } from '../useAuth'
 import { adminService } from '../../services/admin.service'
 
@@ -14,13 +13,20 @@ export const useAdminUsers = () => {
   })
 
   const updateUserRole = useMutation({
-    mutationFn: ({ id, role }: { id: number; role: UserRole }) =>
-      adminService.updateUserRole(token ?? '', id, role),
+    mutationFn: ({ id, role }: { id: number; role: 'client' | 'admin' }) => adminService.updateUserRole(token ?? '', id, role),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
       queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
     },
   })
 
-  return { usersQuery, updateUserRole }
+  const deleteUser = useMutation({
+    mutationFn: (id: number) => adminService.deleteUser(token ?? '', id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
+    },
+  })
+
+  return { usersQuery, updateUserRole, deleteUser }
 }

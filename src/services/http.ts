@@ -18,24 +18,35 @@ interface RequestConfig {
 }
 
 export const request = async <T>(path: string, config: RequestConfig = {}): Promise<T> => {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method: config.method ?? 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(config.token ? { Authorization: `Bearer ${config.token}` } : {}),
-    },
-    body: config.body ? JSON.stringify(config.body) : undefined,
-  })
-
-  const payload = (await response.json().catch(() => ({}))) as {
-    message?: string
-    errors?: string[]
+  let response: Response
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method: config.method ?? 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(config.token ? { Authorization: `Bearer ${config.token}` } : {}),
+      },
+      body: config.body ? JSON.stringify(config.body) : undefined,
+    })
+  } catch {
+    throw new ApiError('Nao foi possivel conectar ao servidor', 0)
   }
+
+  const raw = await response.text().catch(() => '')
+  const payload = (() => {
+    if (!raw) return {}
+    try {
+      return JSON.parse(raw) as { message?: string; errors?: string[] }
+    } catch {
+      return {}
+    }
+  })()
 
   if (!response.ok) {
     const details = payload.errors?.length ? `: ${payload.errors.join(', ')}` : ''
+    const fallbackMessage = `Falha de comunicacao com o servidor (${response.status})`
     throw new ApiError(
-      `${payload.message ?? 'Falha de comunicacao com o servidor'}${details}`,
+      `${payload.message ?? fallbackMessage}${details}`,
       response.status,
     )
   }

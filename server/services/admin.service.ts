@@ -92,3 +92,20 @@ export const updateAdminUserRole = async (id: number, role: UserRole) => {
   const [result] = await db.query('UPDATE app_users SET role = ? WHERE id = ?', [role, id])
   return (result as { affectedRows: number }).affectedRows > 0
 }
+
+export const getAdminUserById = async (id: number) => {
+  const [rows] = await db.query('SELECT id, role FROM app_users WHERE id = ? LIMIT 1', [id])
+  return (rows as Array<{ id: number; role: UserRole }>)[0] ?? null
+}
+
+export const deleteAdminUser = async (id: number) => {
+  await db.query('DELETE FROM app_appointments WHERE user_id = ?', [id])
+  await db.query('DELETE FROM app_password_resets WHERE user_id = ?', [id])
+  const [result] = await db.query('DELETE FROM app_users WHERE id = ?', [id])
+
+  if ((result as { affectedRows: number }).affectedRows === 0) {
+    return { deleted: false as const, reason: 'not_found' as const }
+  }
+
+  return { deleted: true as const }
+}

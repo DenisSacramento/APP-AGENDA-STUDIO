@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { AdminSidebar, type AdminSectionId } from '../../components/admin/AdminSidebar'
 import { AdminStatCard } from '../../components/admin/AdminStatCard'
@@ -6,11 +6,14 @@ import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Badge } from '../../components/ui/Badge'
+import { Toast } from '../../components/ui/Toast'
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
 import { PageContainer } from '../../components/layout/PageContainer'
 import { useAdminDashboard } from '../../hooks/admin/useAdminDashboard'
 import { useAdminServices } from '../../hooks/admin/useAdminServices'
 import { useAdminBookings } from '../../hooks/admin/useAdminBookings'
 import { useAdminUsers } from '../../hooks/admin/useAdminUsers'
+import { ApiError } from '../../services/http'
 import type { AdminService } from '../../types/models'
 
 const toCurrency = (value: number) =>
@@ -33,11 +36,21 @@ export const AdminDashboardPage = () => {
   const [editingService, setEditingService] = useState<AdminService | null>(null)
   const [bookingDate, setBookingDate] = useState('')
   const [bookingSearch, setBookingSearch] = useState('')
+  const [toast, setToast] = useState<{ open: boolean; message: string; type: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    type: 'success',
+  })
+  const [confirmAction, setConfirmAction] = useState<
+    | { type: 'deleteService'; id: number; name: string }
+    | { type: 'deleteUser'; id: number; name: string }
+    | null
+  >(null)
 
   const { data: summary } = useAdminDashboard()
   const { servicesQuery, createService, updateService, deleteService } = useAdminServices()
   const { bookingsQuery, updateBookingStatus } = useAdminBookings({ date: bookingDate, search: bookingSearch })
-  const { usersQuery, updateUserRole } = useAdminUsers()
+  const { usersQuery, deleteUser } = useAdminUsers()
 
   const sectionTitle = useMemo(() => {
     if (activeSection === 'dashboard') return 'Controle de agendas'
@@ -75,6 +88,54 @@ export const AdminDashboardPage = () => {
       price: String(service.price),
     })
     setActiveSection('services')
+  }
+
+  useEffect(() => {
+    if (!toast.open) return
+
+    const timeout = window.setTimeout(() => {
+      setToast((current) => ({ ...current, open: false }))
+    }, 3000)
+
+    return () => window.clearTimeout(timeout)
+  }, [toast.open])
+
+  const confirmPending =
+    confirmAction?.type === 'deleteService'
+      ? deleteService.isPending
+      : confirmAction?.type === 'deleteUser'
+        ? deleteUser.isPending
+        : false
+
+  const handleConfirmAction = () => {
+    if (!confirmAction) return
+
+    if (confirmAction.type === 'deleteService') {
+      deleteService.mutate(confirmAction.id)
+      setConfirmAction(null)
+      return
+    }
+
+    deleteUser.mutate(confirmAction.id, {
+      onSuccess: () => {
+        setToast({
+          open: true,
+          message: 'Usuario excluido com sucesso.',
+          type: 'success',
+        })
+      },
+      onError: (error) => {
+        const message = error instanceof ApiError ? error.message : 'Nao foi possivel excluir o usuario.'
+        setToast({
+          open: true,
+          message,
+          type: 'error',
+        })
+      },
+      onSettled: () => {
+        setConfirmAction(null)
+      },
+    })
   }
 
   return (
@@ -181,9 +242,7 @@ export const AdminDashboardPage = () => {
                           variant="danger"
                           disabled={deleteService.isPending || service.isActive === 0}
                           onClick={() => {
-                            if (window.confirm(`Deseja remover o servico "${service.name}"?`)) {
-                              deleteService.mutate(service.id)
-                            }
+                            setConfirmAction({ type: 'deleteService', id: service.id, name: service.name })
                           }}
                         >
                           Deletar
@@ -270,12 +329,14 @@ export const AdminDashboardPage = () => {
                       </p>
                     </div>
                     <Button
-                      variant={user.role === 'admin' ? 'ghost' : 'secondary'}
+                      variant="danger"
                       className="w-full sm:w-auto"
-                      disabled={updateUserRole.isPending}
-                      onClick={() => updateUserRole.mutate({ id: user.id, role: user.role === 'admin' ? 'client' : 'admin' })}
+                      disabled={deleteUser.isPending || user.role === 'admin'}
+                      onClick={() => {
+                        setConfirmAction({ type: 'deleteUser', id: user.id, name: user.name })
+                      }}
                     >
-                      {user.role === 'admin' ? 'Remover admin' : 'Tornar admin'}
+                      {user.role === 'admin' ? 'Admin protegido' : 'Excluir usuario'}
                     </Button>
                   </Card>
                 ))}
@@ -284,6 +345,21 @@ export const AdminDashboardPage = () => {
           </section>
         </div>
       </div>
+      <ConfirmDialog
+        open={Boolean(confirmAction)}
+        title={confirmAction?.type === 'deleteService' ? 'Excluir serviço' : 'Excluir usuário'}
+        message={
+          confirmAction?.type === 'deleteService'
+            ? `Deseja remover o serviço "${confirmAction.name}"?`
+            : `Deseja excluir o usuário "${confirmAction?.name}"? Essa ação não pode ser desfeita.`
+        }
+        confirmLabel={confirmAction?.type === 'deleteService' ? 'Excluir serviço' : 'Excluir usuário'}
+        cancelLabel="Cancelar"
+        isPending={confirmPending}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={handleConfirmAction}
+      />
+      <Toast open={toast.open} message={toast.message} type={toast.type} />
     </PageContainer>
   )
 }
