@@ -39,7 +39,6 @@ export const BookingPage = () => {
     const stateAny = location.state as BookingLocationState | undefined
     const serviceIdFromState = stateAny?.serviceId
     const offerPriceFromState = stateAny?.offerPrice
-    const offerIdFromState = stateAny?.offerId
     if (serviceIdFromState && services && !selectedService) {
       const found = services.find((s) => Number(s.id) === Number(serviceIdFromState))
       if (found) {
