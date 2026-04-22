@@ -21,5 +21,13 @@ export const useAdminBookings = (filters: { date: string; search: string }) => {
     },
   })
 
-  return { bookingsQuery, updateBookingStatus }
+  const deleteBooking = useMutation({
+    mutationFn: (id: number) => adminService.deleteAppointment(token ?? '', id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'appointments'] })
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
+    },
+  })
+
+  return { bookingsQuery, updateBookingStatus, deleteBooking }
 }

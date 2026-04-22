@@ -9,7 +9,7 @@ import { signToken } from '../utils/jwt.js'
 import { loginSchema } from '../validators/auth.validator.js'
 import { updateAppointmentStatusSchema } from '../validators/appointment.validator.js'
 import { updateUserRoleSchema, upsertServiceSchema } from '../validators/admin.validator.js'
-import { listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
+import { deleteAdminAppointment, listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
 import {
   createAdminService,
   deleteAdminUser,
@@ -177,6 +177,23 @@ adminRouter.patch(
     return res.json({ message: 'Status atualizado com sucesso' })
   },
 )
+
+const handleDeleteAppointment = async (req: Request, res: Response) => {
+  const appointmentId = Number(req.params.id)
+  if (!Number.isInteger(appointmentId) || appointmentId <= 0) {
+    return res.status(400).json({ message: 'ID de agendamento invalido' })
+  }
+
+  const deleted = await deleteAdminAppointment(appointmentId)
+  if (!deleted) {
+    return res.status(404).json({ message: 'Agendamento nao encontrado' })
+  }
+
+  return res.json({ message: 'Agendamento excluido com sucesso' })
+}
+
+adminRouter.delete('/appointments/:id', requireAuth, requireAdmin, handleDeleteAppointment)
+adminRouter.post('/appointments/:id/delete', requireAuth, requireAdmin, handleDeleteAppointment)
 
 const importAdminPasswordHash = async () => {
   const { hashPassword } = await import('../utils/password.js')

@@ -7,7 +7,7 @@ import type {
   AppointmentStatus,
   UserRole,
 } from '../types/models'
-import { request } from './http'
+import { ApiError, request } from './http'
 
 export const adminService = {
   getDashboardSummary: (token: string) =>
@@ -40,6 +40,24 @@ export const adminService = {
       body: { status },
       token,
     }),
+
+  deleteAppointment: async (token: string, appointmentId: number) => {
+    try {
+      return await request<{ message: string }>(`/admin/appointments/${appointmentId}/delete`, {
+        method: 'POST',
+        token,
+      })
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) {
+        return request<{ message: string }>(`/admin/appointments/${appointmentId}`, {
+          method: 'DELETE',
+          token,
+        })
+      }
+
+      throw error
+    }
+  },
 
   getUsers: (token: string) =>
     request<AdminUser[]>('/admin/users', { token }),

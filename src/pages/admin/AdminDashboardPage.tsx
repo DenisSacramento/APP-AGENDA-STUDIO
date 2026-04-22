@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { AdminSidebar, type AdminSectionId } from '../../components/admin/AdminSidebar'
 import { AdminStatCard } from '../../components/admin/AdminStatCard'
@@ -15,6 +15,7 @@ import { useAdminBookings } from '../../hooks/admin/useAdminBookings'
 import { useAdminUsers } from '../../hooks/admin/useAdminUsers'
 import { ApiError } from '../../services/http'
 import type { AdminService } from '../../types/models'
+import { formatDate } from '../../utils/date'
 
 const toCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', {
@@ -22,6 +23,11 @@ const toCurrency = (value: number) =>
     currency: 'BRL',
     minimumFractionDigits: 2,
   }).format(value)
+
+const toDisplayDate = (value: string) => {
+  const formatted = formatDate(value)
+  return formatted === 'Invalid Date' ? value.split('T')[0] : formatted
+}
 
 const defaultServiceForm = {
   name: '',
@@ -43,13 +49,15 @@ export const AdminDashboardPage = () => {
   })
   const [confirmAction, setConfirmAction] = useState<
     | { type: 'deleteService'; id: number; name: string }
+    | { type: 'deleteAppointment'; id: number; name: string }
     | { type: 'deleteUser'; id: number; name: string }
     | null
   >(null)
+  const serviceFormRef = useRef<HTMLDivElement | null>(null)
 
   const { data: summary } = useAdminDashboard()
   const { servicesQuery, createService, updateService, deleteService } = useAdminServices()
-  const { bookingsQuery, updateBookingStatus } = useAdminBookings({ date: bookingDate, search: bookingSearch })
+  const { bookingsQuery, updateBookingStatus, deleteBooking } = useAdminBookings({ date: bookingDate, search: bookingSearch })
   const { usersQuery, deleteUser } = useAdminUsers()
 
   const sectionTitle = useMemo(() => {
@@ -100,12 +108,22 @@ export const AdminDashboardPage = () => {
     return () => window.clearTimeout(timeout)
   }, [toast.open])
 
+  useEffect(() => {
+    if (activeSection !== 'services' || !editingService) return
+
+    requestAnimationFrame(() => {
+      serviceFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [activeSection, editingService])
+
   const confirmPending =
     confirmAction?.type === 'deleteService'
       ? deleteService.isPending
-      : confirmAction?.type === 'deleteUser'
-        ? deleteUser.isPending
-        : false
+      : confirmAction?.type === 'deleteAppointment'
+        ? deleteBooking.isPending
+        : confirmAction?.type === 'deleteUser'
+          ? deleteUser.isPending
+          : false
 
   const handleConfirmAction = () => {
     if (!confirmAction) return
@@ -116,16 +134,40 @@ export const AdminDashboardPage = () => {
       return
     }
 
+    if (confirmAction.type === 'deleteAppointment') {
+      deleteBooking.mutate(confirmAction.id, {
+        onSuccess: () => {
+          setToast({
+            open: true,
+            message: 'Agendamento excluído com sucesso.',
+            type: 'success',
+          })
+        },
+        onError: (error) => {
+          const message = error instanceof ApiError ? error.message : 'Não foi possível excluir o agendamento.'
+          setToast({
+            open: true,
+            message,
+            type: 'error',
+          })
+        },
+        onSettled: () => {
+          setConfirmAction(null)
+        },
+      })
+      return
+    }
+
     deleteUser.mutate(confirmAction.id, {
       onSuccess: () => {
         setToast({
           open: true,
-          message: 'Usuario excluido com sucesso.',
+          message: 'Usuário excluído com sucesso.',
           type: 'success',
         })
       },
       onError: (error) => {
-        const message = error instanceof ApiError ? error.message : 'Nao foi possivel excluir o usuario.'
+        const message = error instanceof ApiError ? error.message : 'Não foi possível excluir o usuário.'
         setToast({
           open: true,
           message,
@@ -162,7 +204,14 @@ export const AdminDashboardPage = () => {
 
             {activeSection === 'services' ? (
               <div className="space-y-4">
-                <Card>
+                <div ref={serviceFormRef}>
+                  <Card>
+                  <div className="mb-4 space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8e005f]">Gestão de serviços</p>
+                    <h3 className="text-[20px] font-extrabold uppercase tracking-[0.06em] text-[#5a4566]">
+                      {editingService ? 'Editar serviço' : 'Novo serviço'}
+                    </h3>
+                  </div>
                   <form className="grid gap-3 md:grid-cols-2" onSubmit={submitServiceForm}>
                     <Input
                       label="Nome"
@@ -179,7 +228,7 @@ export const AdminDashboardPage = () => {
                       required
                     />
                     <label className="md:col-span-2">
-                      <span className="mb-2 block text-sm font-medium text-zinc-700">Descrição</span>
+                      <span className="mb-2 block text-sm font-medium text-[#6c5574]">Descrição</span>
                       <textarea
                         className="w-full rounded-2xl border border-rose-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-rose-300"
                         rows={3}
@@ -216,20 +265,24 @@ export const AdminDashboardPage = () => {
                       ) : null}
                     </div>
                   </form>
-                </Card>
+                  </Card>
+                </div>
 
                 <div className="grid gap-3">
                   {servicesQuery.data?.map((service) => (
                     <Card key={service.id} className="w-full max-w-full space-y-3 overflow-hidden">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="break-words font-display text-xl text-rose-900">{service.name}</h3>
-                          <p className="break-words text-sm text-zinc-600">{service.description}</p>
-                          <p className="mt-1 text-sm text-zinc-700">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e005f]">Serviço</p>
+                          <h3 className="mt-1 break-words text-[20px] font-extrabold uppercase tracking-[0.03em] text-[#5a4566]">
+                            {service.name}
+                          </h3>
+                          <p className="mt-1 break-words text-sm text-[#6c5574]">{service.description}</p>
+                          <p className="mt-1 text-sm font-medium text-[#6c5574]">
                             {service.durationMinutes} min • {toCurrency(Number(service.price))}
                           </p>
                         </div>
-                        <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-600">
+                        <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.06em] text-zinc-600">
                           {service.isActive ? 'Ativo' : 'Inativo'}
                         </span>
                       </div>
@@ -257,6 +310,10 @@ export const AdminDashboardPage = () => {
             {activeSection === 'appointments' ? (
               <div className="space-y-4">
                 <Card>
+                  <div className="mb-4 space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8e005f]">Filtros de agendamento</p>
+                    <h3 className="text-[20px] font-extrabold uppercase tracking-[0.06em] text-[#5a4566]">Buscar e filtrar</h3>
+                  </div>
                   <div className="grid gap-3 md:grid-cols-3">
                     <Input label="Filtrar por data" type="date" value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} />
                     <Input
@@ -284,10 +341,13 @@ export const AdminDashboardPage = () => {
                     <Card key={appointment.id} className="w-full max-w-full space-y-3 overflow-hidden">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <h3 className="break-words font-display text-xl text-rose-900">{appointment.clientName}</h3>
-                          <p className="break-all text-sm text-zinc-600">{appointment.clientEmail}</p>
-                          <p className="break-words text-sm text-zinc-700">
-                            {appointment.serviceName} • {appointment.date} as {appointment.time}
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e005f]">Cliente</p>
+                          <h3 className="mt-1 break-words text-[20px] font-extrabold uppercase tracking-[0.03em] text-[#5a4566]">
+                            {appointment.clientName}
+                          </h3>
+                          <p className="mt-1 break-all text-sm font-medium text-[#6c5574]">{appointment.clientEmail}</p>
+                          <p className="mt-1 break-words text-sm text-[#6c5574]">
+                            {appointment.serviceName} • {toDisplayDate(appointment.date)} as {appointment.time}
                           </p>
                         </div>
                         <div className="shrink-0">
@@ -295,20 +355,30 @@ export const AdminDashboardPage = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm text-zinc-700">Atualizar status:</span>
+                        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e005f]">Atualizar status</span>
                         <select
-                          className="w-full rounded-xl border border-rose-100 bg-white px-3 py-2 text-sm sm:w-auto"
+                          className="w-full rounded-xl border border-[#d8bfd1] bg-white px-3 py-2 text-sm font-medium text-[#5a4566] outline-none transition focus:border-[#b83286] focus:ring-2 focus:ring-[#e7bfd7] sm:w-auto"
                           value={appointment.status}
-                          onChange={(event) =>
+                          onChange={(event) => {
+                            if (event.target.value === 'excluir') {
+                              setConfirmAction({
+                                type: 'deleteAppointment',
+                                id: appointment.id,
+                                name: `${appointment.clientName} ${appointment.serviceName}`,
+                              })
+                              return
+                            }
+
                             updateBookingStatus.mutate({
                               id: appointment.id,
                               status: event.target.value as 'pendente' | 'confirmado' | 'cancelado',
                             })
-                          }
+                          }}
                         >
                           <option value="pendente">Pendente</option>
                           <option value="confirmado">Confirmado</option>
                           <option value="cancelado">Cancelado</option>
+                          <option value="excluir">Excluir</option>
                         </select>
                       </div>
                     </Card>
@@ -319,12 +389,17 @@ export const AdminDashboardPage = () => {
 
             {activeSection === 'users' ? (
               <div className="grid gap-3">
+                <Card>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8e005f]">Gestão de usuários</p>
+                  <h3 className="mt-1 text-[20px] font-extrabold uppercase tracking-[0.06em] text-[#5a4566]">Contas cadastradas</h3>
+                </Card>
                 {usersQuery.data?.map((user) => (
                   <Card key={user.id} className="flex w-full max-w-full flex-wrap items-center justify-between gap-3 overflow-hidden">
                     <div className="min-w-0">
-                      <h3 className="break-words font-display text-xl text-rose-900">{user.name}</h3>
-                      <p className="break-all text-sm text-zinc-600">{user.email}</p>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e005f]">Usuário</p>
+                      <h3 className="mt-1 break-words text-[20px] font-extrabold uppercase tracking-[0.03em] text-[#5a4566]">{user.name}</h3>
+                      <p className="mt-1 break-all text-sm font-medium text-[#6c5574]">{user.email}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8e005f]">
                         Perfil: {user.role === 'admin' ? 'Admin' : 'Comum'}
                       </p>
                     </div>
@@ -336,7 +411,7 @@ export const AdminDashboardPage = () => {
                         setConfirmAction({ type: 'deleteUser', id: user.id, name: user.name })
                       }}
                     >
-                      {user.role === 'admin' ? 'Admin protegido' : 'Excluir usuario'}
+                      {user.role === 'admin' ? 'Admin protegido' : 'Excluir usuário'}
                     </Button>
                   </Card>
                 ))}
@@ -345,20 +420,36 @@ export const AdminDashboardPage = () => {
           </section>
         </div>
       </div>
+
       <ConfirmDialog
         open={Boolean(confirmAction)}
-        title={confirmAction?.type === 'deleteService' ? 'Excluir serviço' : 'Excluir usuário'}
+        title={
+          confirmAction?.type === 'deleteService'
+            ? 'Excluir serviço'
+            : confirmAction?.type === 'deleteAppointment'
+              ? 'Excluir agendamento'
+              : 'Excluir usuário'
+        }
         message={
           confirmAction?.type === 'deleteService'
             ? `Deseja remover o serviço "${confirmAction.name}"?`
-            : `Deseja excluir o usuário "${confirmAction?.name}"? Essa ação não pode ser desfeita.`
+            : confirmAction?.type === 'deleteAppointment'
+              ? `Deseja excluir o agendamento de ${confirmAction?.name}? Essa ação não pode ser desfeita.`
+              : `Deseja excluir o usuário "${confirmAction?.name}"? Essa ação não pode ser desfeita.`
         }
-        confirmLabel={confirmAction?.type === 'deleteService' ? 'Excluir serviço' : 'Excluir usuário'}
+        confirmLabel={
+          confirmAction?.type === 'deleteService'
+            ? 'Excluir serviço'
+            : confirmAction?.type === 'deleteAppointment'
+              ? 'Excluir agendamento'
+              : 'Excluir usuário'
+        }
         cancelLabel="Cancelar"
         isPending={confirmPending}
         onCancel={() => setConfirmAction(null)}
         onConfirm={handleConfirmAction}
       />
+
       <Toast open={toast.open} message={toast.message} type={toast.type} />
     </PageContainer>
   )

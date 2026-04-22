@@ -144,3 +144,8 @@ export const updateAppointmentStatus = async (
   return (result as { affectedRows: number }).affectedRows > 0
 }
 
+export const deleteAdminAppointment = async (appointmentId: number) => {
+  const [result] = await db.query('DELETE FROM app_appointments WHERE id = ?', [appointmentId])
+  return (result as { affectedRows: number }).affectedRows > 0
+}
+
