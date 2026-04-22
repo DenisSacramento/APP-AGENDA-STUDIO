@@ -9,7 +9,7 @@ import { signToken } from '../utils/jwt.js'
 import { loginSchema } from '../validators/auth.validator.js'
 import { updateAppointmentStatusSchema } from '../validators/appointment.validator.js'
 import { updateUserRoleSchema, upsertOfferSchema, upsertServiceSchema } from '../validators/admin.validator.js'
-import { deleteAdminAppointment, listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
+import { deleteAdminAppointment, listAdminAppointments, updateAppointmentStatus, findOverlappingAppointments } from '../services/appointment.service.js'
 import {
   createAdminOffer,
   createAdminService,
@@ -218,6 +218,11 @@ const handleDeleteAppointment = async (req: Request, res: Response) => {
 
 adminRouter.delete('/appointments/:id', requireAuth, requireAdmin, handleDeleteAppointment)
 adminRouter.post('/appointments/:id/delete', requireAuth, requireAdmin, handleDeleteAppointment)
+
+adminRouter.get('/appointments/verify-overlaps', requireAuth, requireAdmin, async (_req, res) => {
+  const conflicts = await findOverlappingAppointments()
+  return res.json(conflicts)
+})
 
 const importAdminPasswordHash = async () => {
   const { hashPassword } = await import('../utils/password.js')

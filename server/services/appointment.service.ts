@@ -194,3 +194,59 @@ export const deleteAdminAppointment = async (appointmentId: number) => {
   return (result as { affectedRows: number }).affectedRows > 0
 }
 
+export const findOverlappingAppointments = async () => {
+  const [rows] = await db.query(
+    `SELECT a.id, a.appointment_date AS date, a.time_slot AS time, s.duration_minutes AS durationMinutes, u.name AS clientName, a.status
+       FROM app_appointments a
+       INNER JOIN app_services s ON s.id = a.service_id
+       INNER JOIN app_users u ON u.id = a.user_id
+      WHERE a.status IN ('pendente','confirmado')
+      ORDER BY a.appointment_date ASC, a.time_slot ASC`,
+  )
+
+  const appts = rows as Array<{ id: number; date: string; time: string; durationMinutes: number; clientName: string; status: string }>
+
+  const timeToMinutes = (t: string) => {
+    const [h, m] = t.split(':').map(Number)
+    return h * 60 + m
+  }
+
+  const conflicts: Array<{
+    date: string
+    a: { id: number; time: string; duration: number; clientName: string }
+    b: { id: number; time: string; duration: number; clientName: string }
+  }> = []
+
+  // group by date
+  const byDate = appts.reduce((acc, ap) => {
+    acc[ap.date] = acc[ap.date] ?? []
+    acc[ap.date].push(ap)
+    return acc
+  }, {} as Record<string, typeof appts>)
+
+  for (const date of Object.keys(byDate)) {
+    const list = byDate[date]
+    for (let i = 0; i < list.length; i++) {
+      const a = list[i]
+      const aStart = timeToMinutes(a.time)
+      const aEnd = aStart + a.durationMinutes
+
+      for (let j = i + 1; j < list.length; j++) {
+        const b = list[j]
+        const bStart = timeToMinutes(b.time)
+        const bEnd = bStart + b.durationMinutes
+
+        if (aStart < bEnd && aEnd > bStart) {
+          conflicts.push({
+            date,
+            a: { id: a.id, time: a.time, duration: a.durationMinutes, clientName: a.clientName },
+            b: { id: b.id, time: b.time, duration: b.durationMinutes, clientName: b.clientName },
+          })
+        }
+      }
+    }
+  }
+
+  return conflicts
+}
+
