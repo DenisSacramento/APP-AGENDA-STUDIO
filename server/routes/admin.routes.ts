@@ -155,7 +155,7 @@ const handleDeleteUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'ID de usuario invalido' })
     }
 
-    if (Number(req.user?.sub ?? 0) === userId) {
+    if (Number((req as any).user?.sub ?? 0) === userId) {
       return res.status(400).json({ message: 'Nao e permitido excluir o proprio usuario admin' })
     }
 
