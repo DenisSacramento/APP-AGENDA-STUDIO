@@ -20,7 +20,6 @@ export const BookingPage = () => {
   const [step, setStep] = useState(2)
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [appliedOfferPrice, setAppliedOfferPrice] = useState<number | null>(null)
-  const [appliedOfferId, setAppliedOfferId] = useState<number | null>(null)
   const [selectedDate, setSelectedDate] = useState(todayISO())
   const [selectedTime, setSelectedTime] = useState('')
   const [notes, setNotes] = useState('')
@@ -47,7 +46,6 @@ export const BookingPage = () => {
         setSelectedService(found)
         setStep(2)
         if (typeof offerPriceFromState === 'number') setAppliedOfferPrice(offerPriceFromState)
-        if (typeof offerIdFromState === 'number') setAppliedOfferId(offerIdFromState)
       }
     }
   }, [location.state, services, selectedService])
