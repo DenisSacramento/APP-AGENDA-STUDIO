@@ -6,7 +6,12 @@ export const appointmentService = {
 
   getOffers: () => request<Offer[]>('/appointments/offers'),
 
-  getAvailableSlots: (date: string) => request<{ slots: string[] }>(`/appointments/slots?date=${date}`),
+  getAvailableSlots: (date: string, serviceId?: number) => {
+    const qs = new URLSearchParams()
+    qs.set('date', date)
+    if (serviceId) qs.set('serviceId', String(serviceId))
+    return request<{ slots: string[] }>(`/appointments/slots?${qs.toString()}`)
+  },
 
   createAppointment: (
     token: string,

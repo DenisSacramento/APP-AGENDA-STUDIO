@@ -27,12 +27,13 @@ appointmentRouter.get('/offers', async (_req, res) => {
 
 appointmentRouter.get('/slots', async (req, res) => {
   const date = req.query.date as string | undefined
+  const serviceId = req.query.serviceId ? Number(req.query.serviceId) : undefined
 
   if (!date) {
     return res.status(400).json({ message: 'Data obrigatoria' })
   }
 
-  const slots = await listAvailableTimes(date)
+  const slots = await listAvailableTimes(date, serviceId)
   return res.json({ slots })
 })
 

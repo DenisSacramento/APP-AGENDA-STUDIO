@@ -59,9 +59,13 @@ export const BookingPage = () => {
   }, [services, selectedService, location.state, navigate])
 
   const { data: slotsData } = useQuery({
-    queryKey: ['slots', selectedDate],
-    queryFn: () => appointmentService.getAvailableSlots(selectedDate),
-    enabled: Boolean(selectedDate),
+    queryKey: ['slots', selectedDate, selectedService?.id],
+    queryFn: () => appointmentService.getAvailableSlots(selectedDate, selectedService?.id),
+    enabled: Boolean(selectedDate) && Boolean(selectedService?.id),
+    // Enquanto o usuário estiver na etapa 3 (escolhendo horário), fazemos polling
+    // para refletir bloqueios feitos por outros clientes sem precisar recarregar.
+    // Polling leve a cada 15s é razoável e não altera a lógica do agendamento.
+    refetchInterval: step === 3 ? 15000 : false,
   })
 
   const createMutation = useMutation({
@@ -95,6 +99,8 @@ export const BookingPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-appointments'] })
+      // Atualiza slots da data selecionada e do servico para que outros clientes vejam o bloqueio
+      queryClient.invalidateQueries({ queryKey: ['slots', selectedDate, selectedService?.id] })
       setShowSuccessPopup(true)
       setStep(1)
       setSelectedService(null)

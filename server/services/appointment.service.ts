@@ -16,26 +16,60 @@ export const listServices = async () => {
   }>
 }
 
-export const listAvailableTimes = async (date: string) => {
-  const workingHours = [
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-  ]
+export const listAvailableTimes = async (date: string, serviceId?: number) => {
+  // slots every 30 minutes from 09:00 to 18:00 (last start 17:30)
+  const slotIntervalMinutes = 30
+  const startMinutes = 9 * 60 // 09:00
+  const endMinutes = 18 * 60 // 18:00
 
+  // determine requested service duration (default to 30 if not provided)
+  let requestedDuration = 30
+  if (serviceId) {
+    const [srows] = await db.query('SELECT duration_minutes AS durationMinutes FROM app_services WHERE id = ? AND is_active = 1', [serviceId])
+    if ((srows as Array<{ durationMinutes: number }>).length > 0) {
+      requestedDuration = (srows as Array<{ durationMinutes: number }>)[0].durationMinutes
+    }
+  }
+
+  // fetch existing appointments for the date with their service durations
   const [rows] = await db.query(
-    "SELECT time_slot AS time FROM app_appointments WHERE appointment_date = ? AND status IN ('pendente','confirmado')",
+    `SELECT a.time_slot AS time, s.duration_minutes AS durationMinutes
+       FROM app_appointments a
+       INNER JOIN app_services s ON s.id = a.service_id
+      WHERE a.appointment_date = ? AND a.status IN ('pendente','confirmado')`,
     [date],
   )
 
-  const occupied = new Set((rows as Array<{ time: string }>).map((row) => row.time))
-  return workingHours.filter((time) => !occupied.has(time))
+  const existing = rows as Array<{ time: string; durationMinutes: number }>
+
+  const timeToMinutes = (t: string) => {
+    const [h, m] = t.split(':').map(Number)
+    return h * 60 + m
+  }
+
+  const slots: string[] = []
+  for (let m = startMinutes; m + slotIntervalMinutes <= endMinutes; m += slotIntervalMinutes) {
+    const hh = String(Math.floor(m / 60)).padStart(2, '0')
+    const mm = String(m % 60).padStart(2, '0')
+    slots.push(`${hh}:${mm}`)
+  }
+
+  const available = slots.filter((slot) => {
+    const reqStart = timeToMinutes(slot)
+    const reqEnd = reqStart + requestedDuration
+
+    for (const ap of existing) {
+      const exStart = timeToMinutes(ap.time)
+      const exEnd = exStart + ap.durationMinutes
+
+      // overlap if exStart < reqEnd AND exEnd > reqStart
+      if (exStart < reqEnd && exEnd > reqStart) return false
+    }
+
+    return true
+  })
+
+  return available
 }
 
 export const createAppointment = async (
@@ -60,9 +94,20 @@ export const createAppointment = async (
       throw new Error('SERVICE_NOT_FOUND')
     }
 
+    // Verifica sobreposição considerando duração do servico
+    const [[serviceInfo]] = (await conn.query('SELECT duration_minutes AS durationMinutes FROM app_services WHERE id = ? LIMIT 1', [serviceId])) as unknown as [[{ durationMinutes: number }]]
+    const reqDuration = serviceInfo?.durationMinutes ?? 30
+
     const [occupiedRows] = await conn.query(
-      "SELECT id FROM app_appointments WHERE appointment_date = ? AND time_slot = ? AND status IN ('pendente','confirmado') FOR UPDATE",
-      [date, time],
+      `SELECT a.id
+         FROM app_appointments a
+         INNER JOIN app_services s ON s.id = a.service_id
+        WHERE a.appointment_date = ?
+          AND a.status IN ('pendente','confirmado')
+          AND (STR_TO_DATE(a.time_slot, '%H:%i') < ADDTIME(STR_TO_DATE(?, '%H:%i'), SEC_TO_TIME(?*60))
+               AND ADDTIME(STR_TO_DATE(a.time_slot, '%H:%i'), SEC_TO_TIME(s.duration_minutes*60)) > STR_TO_DATE(?, '%H:%i'))
+        FOR UPDATE`,
+      [date, time, reqDuration, time],
     )
 
     if ((occupiedRows as Array<{ id: number }>).length > 0) {
