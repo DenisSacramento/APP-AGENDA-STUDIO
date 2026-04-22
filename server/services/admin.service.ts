@@ -118,6 +118,7 @@ export const listAdminOffers = async () => {
         o.service_name AS serviceName,
         o.offer_price AS offerPrice,
         o.is_active AS isActive,
+        s.id AS serviceId,
         s.description AS description
       FROM app_offers o
       LEFT JOIN app_services s ON s.name = o.service_name
@@ -130,6 +131,7 @@ export const listAdminOffers = async () => {
     serviceName: string
     offerPrice: number
     isActive: number
+    serviceId: number | null
     description: string | null
   }>
 }
@@ -141,6 +143,7 @@ export const listClientOffers = async () => {
         o.id,
         o.service_name AS serviceName,
         o.offer_price AS offerPrice,
+        s.id AS serviceId,
         s.description AS description
       FROM app_offers o
       LEFT JOIN app_services s ON s.name = o.service_name
@@ -153,6 +156,7 @@ export const listClientOffers = async () => {
     id: number
     serviceName: string
     offerPrice: number
+    serviceId: number | null
     description: string | null
   }>
 }

@@ -343,7 +343,22 @@ export const AdminDashboardPage = () => {
                     <h3 className="text-[20px] font-extrabold uppercase tracking-[0.06em] text-[#5a4566]">Nova oferta</h3>
                   </div>
                   <form className="grid gap-3 md:grid-cols-2" onSubmit={submitOfferForm}>
-                    <Input label="Serviço" value={offerForm.serviceName} onChange={(event) => setOfferForm((current) => ({ ...current, serviceName: event.target.value }))} required />
+                    <label>
+                      <span className="mb-2 block text-sm font-medium text-[#6c5574]">Serviço</span>
+                      <select
+                        className="w-full rounded-xl border border-rose-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-rose-300"
+                        value={offerForm.serviceName}
+                        onChange={(event) => setOfferForm((current) => ({ ...current, serviceName: event.target.value }))}
+                        required
+                      >
+                        <option value="">Selecione um serviço</option>
+                        {servicesQuery.data?.map((s) => (
+                          <option key={s.id} value={s.name}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <Input
                       label="Preço da oferta (R$)"
                       type="number"

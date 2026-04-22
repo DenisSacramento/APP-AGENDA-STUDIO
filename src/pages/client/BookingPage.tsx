@@ -14,11 +14,13 @@ import dayjs from 'dayjs'
 import type { Service } from '../../types/models'
 
 const notesSchema = z.string().max(500)
-type BookingLocationState = { serviceId?: number }
+type BookingLocationState = { serviceId?: number; offerPrice?: number; offerId?: number }
 
 export const BookingPage = () => {
   const [step, setStep] = useState(2)
   const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [appliedOfferPrice, setAppliedOfferPrice] = useState<number | null>(null)
+  const [appliedOfferId, setAppliedOfferId] = useState<number | null>(null)
   const [selectedDate, setSelectedDate] = useState(todayISO())
   const [selectedTime, setSelectedTime] = useState('')
   const [notes, setNotes] = useState('')
@@ -37,11 +39,15 @@ export const BookingPage = () => {
   useEffect(() => {
     const stateAny = location.state as BookingLocationState | undefined
     const serviceIdFromState = stateAny?.serviceId
+    const offerPriceFromState = stateAny?.offerPrice
+    const offerIdFromState = stateAny?.offerId
     if (serviceIdFromState && services && !selectedService) {
       const found = services.find((s) => Number(s.id) === Number(serviceIdFromState))
       if (found) {
         setSelectedService(found)
         setStep(2)
+        if (typeof offerPriceFromState === 'number') setAppliedOfferPrice(offerPriceFromState)
+        if (typeof offerIdFromState === 'number') setAppliedOfferId(offerIdFromState)
       }
     }
   }, [location.state, services, selectedService])
@@ -244,7 +250,14 @@ export const BookingPage = () => {
 
                 <div className="mt-5 grid gap-3 rounded-2xl border border-[#e2cbda] bg-white/70 p-4">
                   <p className="text-sm text-[#7b6481]">{selectedService.durationMinutes} min</p>
-                  <p className="text-base font-bold text-[#8e005f]">{formatCurrency(Number(selectedService.price ?? 0))}</p>
+                  {appliedOfferPrice ? (
+                    <div>
+                      <p className="text-sm text-[#7b6481] line-through">{formatCurrency(Number(selectedService.price ?? 0))}</p>
+                      <p className="text-base font-bold text-[#8e005f]">{formatCurrency(Number(appliedOfferPrice))}</p>
+                    </div>
+                  ) : (
+                    <p className="text-base font-bold text-[#8e005f]">{formatCurrency(Number(selectedService.price ?? 0))}</p>
+                  )}
                 </div>
 
                 <div className="mt-5 rounded-2xl border border-dashed border-[#d8bfd1] bg-white/50 px-4 py-3 text-sm leading-relaxed text-[#6c5574]">
