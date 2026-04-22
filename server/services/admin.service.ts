@@ -113,9 +113,15 @@ export const deleteAdminUser = async (id: number) => {
 export const listAdminOffers = async () => {
   const [rows] = await db.query(
     `
-      SELECT id, service_name AS serviceName, offer_price AS offerPrice, is_active AS isActive
-        FROM app_offers
-       ORDER BY is_active DESC, created_at DESC, id DESC
+      SELECT
+        o.id,
+        o.service_name AS serviceName,
+        o.offer_price AS offerPrice,
+        o.is_active AS isActive,
+        s.description AS description
+      FROM app_offers o
+      LEFT JOIN app_services s ON s.name = o.service_name
+      ORDER BY o.is_active DESC, o.created_at DESC, o.id DESC
     `,
   )
 
@@ -124,16 +130,22 @@ export const listAdminOffers = async () => {
     serviceName: string
     offerPrice: number
     isActive: number
+    description: string | null
   }>
 }
 
 export const listClientOffers = async () => {
   const [rows] = await db.query(
     `
-      SELECT id, service_name AS serviceName, offer_price AS offerPrice
-        FROM app_offers
-       WHERE is_active = 1
-       ORDER BY created_at DESC, id DESC
+      SELECT
+        o.id,
+        o.service_name AS serviceName,
+        o.offer_price AS offerPrice,
+        s.description AS description
+      FROM app_offers o
+      LEFT JOIN app_services s ON s.name = o.service_name
+      WHERE o.is_active = 1
+      ORDER BY o.created_at DESC, o.id DESC
     `,
   )
 
@@ -141,6 +153,7 @@ export const listClientOffers = async () => {
     id: number
     serviceName: string
     offerPrice: number
+    description: string | null
   }>
 }
 

@@ -74,6 +74,7 @@ export interface Offer {
   id: number
   serviceName: string
   offerPrice: number
+  description?: string | null
 }
 
 export interface AdminOffer extends Offer {

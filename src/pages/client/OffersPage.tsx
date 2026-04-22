@@ -25,6 +25,9 @@ export const OffersPage = () => {
             <Card key={offer.id} className="space-y-2 border-[#e6d7ea] bg-white/92">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e005f]">Oferta especial</p>
               <h2 className="break-words text-[20px] font-extrabold uppercase tracking-[0.03em] text-[#5a4566]">{offer.serviceName}</h2>
+              {offer.description ? (
+                <p className="mt-1 break-words text-sm text-[#6c5574]">{offer.description}</p>
+              ) : null}
               <p className="text-base font-bold text-[#8e005f]">{formatCurrency(Number(offer.offerPrice))}</p>
             </Card>
           ))
