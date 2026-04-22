@@ -10,3 +10,8 @@ export const upsertServiceSchema = z.object({
 export const updateUserRoleSchema = z.object({
   role: z.enum(['client', 'admin']),
 })
+
+export const upsertOfferSchema = z.object({
+  serviceName: z.string().min(2, 'Nome do serviço deve ter no mínimo 2 caracteres').max(120),
+  offerPrice: z.number().positive('Preço da oferta deve ser maior que zero'),
+})

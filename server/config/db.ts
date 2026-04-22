@@ -188,6 +188,16 @@ export const initDatabase = async () => {
     )
   `)
 
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS app_offers (
+      id BIGINT PRIMARY KEY AUTO_INCREMENT,
+      service_name VARCHAR(120) NOT NULL,
+      offer_price DECIMAL(10,2) NOT NULL,
+      is_active TINYINT(1) NOT NULL DEFAULT 1,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `)
+
   for (const service of OFFICIAL_SERVICES) {
     const [updateResult] = await db.query(
       `

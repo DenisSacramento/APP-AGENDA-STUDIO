@@ -1,8 +1,10 @@
-import type { AdminAppointment, Appointment, AppointmentStatus, Service } from '../types/models'
+import type { AdminAppointment, Appointment, AppointmentStatus, Offer, Service } from '../types/models'
 import { request } from './http'
 
 export const appointmentService = {
   getServices: () => request<Service[]>('/appointments/services'),
+
+  getOffers: () => request<Offer[]>('/appointments/offers'),
 
   getAvailableSlots: (date: string) => request<{ slots: string[] }>(`/appointments/slots?date=${date}`),
 

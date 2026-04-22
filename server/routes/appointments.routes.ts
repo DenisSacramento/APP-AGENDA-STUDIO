@@ -9,6 +9,7 @@ import {
   listServices,
   listUserAppointments,
 } from '../services/appointment.service.js'
+import { listClientOffers } from '../services/admin.service.js'
 import type { AuthenticatedRequest } from '../types/auth.js'
 import { createAppointmentSchema } from '../validators/appointment.validator.js'
 
@@ -17,6 +18,11 @@ export const appointmentRouter = Router()
 appointmentRouter.get('/services', async (_req, res) => {
   const services = await listServices()
   res.json(services)
+})
+
+appointmentRouter.get('/offers', async (_req, res) => {
+  const offers = await listClientOffers()
+  res.json(offers)
 })
 
 appointmentRouter.get('/slots', async (req, res) => {

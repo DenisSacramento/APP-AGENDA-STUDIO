@@ -69,3 +69,18 @@ export interface AdminUser {
   email: string
   role: UserRole
 }
+
+export interface Offer {
+  id: number
+  serviceName: string
+  offerPrice: number
+}
+
+export interface AdminOffer extends Offer {
+  isActive: number
+}
+
+export interface AdminOfferPayload {
+  serviceName: string
+  offerPrice: number
+}

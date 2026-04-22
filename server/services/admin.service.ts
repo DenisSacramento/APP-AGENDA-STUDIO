@@ -109,3 +109,54 @@ export const deleteAdminUser = async (id: number) => {
 
   return { deleted: true as const }
 }
+
+export const listAdminOffers = async () => {
+  const [rows] = await db.query(
+    `
+      SELECT id, service_name AS serviceName, offer_price AS offerPrice, is_active AS isActive
+        FROM app_offers
+       ORDER BY is_active DESC, created_at DESC, id DESC
+    `,
+  )
+
+  return rows as Array<{
+    id: number
+    serviceName: string
+    offerPrice: number
+    isActive: number
+  }>
+}
+
+export const listClientOffers = async () => {
+  const [rows] = await db.query(
+    `
+      SELECT id, service_name AS serviceName, offer_price AS offerPrice
+        FROM app_offers
+       WHERE is_active = 1
+       ORDER BY created_at DESC, id DESC
+    `,
+  )
+
+  return rows as Array<{
+    id: number
+    serviceName: string
+    offerPrice: number
+  }>
+}
+
+export const createAdminOffer = async (payload: { serviceName: string; offerPrice: number }) => {
+  const [result] = await db.query(
+    `
+      INSERT INTO app_offers (service_name, offer_price, is_active)
+      VALUES (?, ?, 1)
+    `,
+    [payload.serviceName, payload.offerPrice],
+  )
+
+  return (result as { insertId: number }).insertId
+}
+
+export const deactivateAdminOffer = async (id: number) => {
+  const [result] = await db.query('UPDATE app_offers SET is_active = 0 WHERE id = ?', [id])
+  return (result as { affectedRows: number }).affectedRows > 0
+}

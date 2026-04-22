@@ -1,6 +1,8 @@
 import type {
   AdminAppointment,
   AdminDashboardSummary,
+  AdminOffer,
+  AdminOfferPayload,
   AdminService,
   AdminServicePayload,
   AdminUser,
@@ -16,14 +18,23 @@ export const adminService = {
   getServices: (token: string) =>
     request<AdminService[]>('/admin/services', { token }),
 
+  getOffers: (token: string) =>
+    request<AdminOffer[]>('/admin/offers', { token }),
+
   createService: (token: string, payload: AdminServicePayload) =>
     request<{ id: number; message: string }>('/admin/services', { method: 'POST', body: payload, token }),
+
+  createOffer: (token: string, payload: AdminOfferPayload) =>
+    request<{ id: number; message: string }>('/admin/offers', { method: 'POST', body: payload, token }),
 
   updateService: (token: string, serviceId: number, payload: AdminServicePayload) =>
     request<{ message: string }>(`/admin/services/${serviceId}`, { method: 'PUT', body: payload, token }),
 
   deleteService: (token: string, serviceId: number) =>
     request<{ message: string }>(`/admin/services/${serviceId}`, { method: 'DELETE', token }),
+
+  deleteOffer: (token: string, offerId: number) =>
+    request<{ message: string }>(`/admin/offers/${offerId}`, { method: 'DELETE', token }),
 
   getAppointments: (token: string, date?: string, search?: string) => {
     const query = new URLSearchParams()

@@ -8,14 +8,17 @@ import { comparePassword } from '../utils/password.js'
 import { signToken } from '../utils/jwt.js'
 import { loginSchema } from '../validators/auth.validator.js'
 import { updateAppointmentStatusSchema } from '../validators/appointment.validator.js'
-import { updateUserRoleSchema, upsertServiceSchema } from '../validators/admin.validator.js'
+import { updateUserRoleSchema, upsertOfferSchema, upsertServiceSchema } from '../validators/admin.validator.js'
 import { deleteAdminAppointment, listAdminAppointments, updateAppointmentStatus } from '../services/appointment.service.js'
 import {
+  createAdminOffer,
   createAdminService,
   deleteAdminUser,
+  deactivateAdminOffer,
   deactivateAdminService,
   getAdminUserById,
   getDashboardSummary,
+  listAdminOffers,
   listAdminServices,
   listAdminUsers,
   updateAdminService,
@@ -72,9 +75,19 @@ adminRouter.get('/services', requireAuth, requireAdmin, async (_req, res) => {
   return res.json(services)
 })
 
+adminRouter.get('/offers', requireAuth, requireAdmin, async (_req, res) => {
+  const offers = await listAdminOffers()
+  return res.json(offers)
+})
+
 adminRouter.post('/services', requireAuth, requireAdmin, sanitizeBody, validate(upsertServiceSchema), async (req, res) => {
   const serviceId = await createAdminService(req.body)
   return res.status(201).json({ id: serviceId, message: 'Servico criado com sucesso' })
+})
+
+adminRouter.post('/offers', requireAuth, requireAdmin, sanitizeBody, validate(upsertOfferSchema), async (req, res) => {
+  const offerId = await createAdminOffer(req.body)
+  return res.status(201).json({ id: offerId, message: 'Oferta criada com sucesso' })
 })
 
 adminRouter.put('/services/:id', requireAuth, requireAdmin, sanitizeBody, validate(upsertServiceSchema), async (req, res) => {
@@ -97,6 +110,17 @@ adminRouter.delete('/services/:id', requireAuth, requireAdmin, async (req, res) 
   }
 
   return res.json({ message: 'Servico removido com sucesso' })
+})
+
+adminRouter.delete('/offers/:id', requireAuth, requireAdmin, async (req, res) => {
+  const offerId = Number(req.params.id)
+  const deleted = await deactivateAdminOffer(offerId)
+
+  if (!deleted) {
+    return res.status(404).json({ message: 'Oferta nao encontrada' })
+  }
+
+  return res.json({ message: 'Oferta removida com sucesso' })
 })
 
 adminRouter.get('/users', requireAuth, requireAdmin, async (_req, res) => {

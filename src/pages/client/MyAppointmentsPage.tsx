@@ -28,6 +28,11 @@ export const MyAppointmentsPage = () => {
     <PageContainer>
       <h1 className="font-display text-3xl text-rose-900">Meus agendamentos</h1>
       <div className="mt-6 grid gap-4">
+        {data && data.length === 0 ? (
+          <Card className="border-[#e6d7ea] bg-white/85 p-5 text-center">
+            <p className="text-sm font-medium text-[#6c5574]">nenhum serviço agendado</p>
+          </Card>
+        ) : null}
         {data?.map((appointment) => (
           <Card key={appointment.id} className="space-y-3">
             <div className="flex items-start justify-between gap-3">
