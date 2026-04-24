@@ -113,6 +113,7 @@ export const db = mysql.createPool({
   user: env.tidbUser,
   password: env.tidbPassword,
   database: env.tidbDatabase,
+  dateStrings: true,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
