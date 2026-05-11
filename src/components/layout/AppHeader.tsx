@@ -12,7 +12,7 @@ export const AppHeader = () => {
 
   return (
     <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-[#f6f2fb]/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-y-3 px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="leading-tight">
           <img
             src="/images/logo-karine-reverte-transparent.png"
@@ -21,7 +21,7 @@ export const AppHeader = () => {
           />
         </Link>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav className="order-3 flex w-full items-center justify-center gap-2 md:order-none md:w-auto">
           <NavLink className={navItemClass} to="/services">
             <Scissors size={17} /> Serviços
           </NavLink>
