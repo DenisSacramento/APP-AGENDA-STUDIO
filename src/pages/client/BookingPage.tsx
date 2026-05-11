@@ -14,7 +14,7 @@ import dayjs from 'dayjs'
 import type { Service } from '../../types/models'
 
 const notesSchema = z.string().max(500)
-type BookingLocationState = { serviceId?: number; offerPrice?: number; offerId?: number }
+type BookingLocationState = { serviceId?: number | string; offerPrice?: number; offerId?: number }
 
 export const BookingPage = () => {
   const [step, setStep] = useState(2)
@@ -38,9 +38,15 @@ export const BookingPage = () => {
   useEffect(() => {
     const stateAny = location.state as BookingLocationState | undefined
     const serviceIdFromState = stateAny?.serviceId
+    const normalizedServiceId =
+      typeof serviceIdFromState === 'number'
+        ? serviceIdFromState
+        : typeof serviceIdFromState === 'string'
+          ? Number(serviceIdFromState)
+          : NaN
     const offerPriceFromState = stateAny?.offerPrice
-    if (serviceIdFromState && services && !selectedService) {
-      const found = services.find((s) => Number(s.id) === Number(serviceIdFromState))
+    if (Number.isFinite(normalizedServiceId) && services && !selectedService) {
+      const found = services.find((s) => Number(s.id) === normalizedServiceId)
       if (found) {
         setSelectedService(found)
         setStep(2)
@@ -52,8 +58,14 @@ export const BookingPage = () => {
   useEffect(() => {
     const stateAny = location.state as BookingLocationState | undefined
     const serviceIdFromState = stateAny?.serviceId
+    const hasServiceIdFromState =
+      typeof serviceIdFromState === 'number'
+        ? Number.isFinite(serviceIdFromState)
+        : typeof serviceIdFromState === 'string'
+          ? serviceIdFromState.trim().length > 0
+          : false
     if (!services) return
-    if (!serviceIdFromState && !selectedService) {
+    if (!hasServiceIdFromState && !selectedService) {
       navigate('/services')
     }
   }, [services, selectedService, location.state, navigate])
