@@ -17,12 +17,11 @@ export const HomePage = () => {
           <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#8e005f] sm:text-base">
             <Sparkles size={16} /> Seu salão de beleza de confiança
           </p>
-          <div className="space-y-2">
-            <p className="studio-script studio-effect -rotate-[5deg] text-[61px] leading-none text-[#dfc370] sm:text-[85px]">Studio</p>
-            <h1 className="text-[40px] font-black uppercase tracking-[0.12em] text-[#d10677] drop-shadow-[0_3px_0_rgba(107,0,69,0.18)] sm:text-[52px]">
-              Karine Reverte
-            </h1>
-          </div>
+          <img
+            src="/images/logo-karine-reverte-transparent.png"
+            alt="Studio Karine Reverte"
+            className="mx-auto h-auto w-[270px] sm:w-[360px]"
+          />
           <p className="mx-auto max-w-[560px] text-base leading-relaxed text-[#68607d] sm:text-[18px]">
             Aqui nós não cuidamos somente da estética, cuidamos de pessoas, devolvendo autoestima, dignidade e alegria. Você é tratada
             com respeito, honestidade e amor.
@@ -206,10 +205,11 @@ export const HomePage = () => {
       <footer className="overflow-hidden rounded-[28px] border border-[#d9d1e4] bg-[#f2edf7] px-6 py-8 text-[#3d2f4a] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_8px_22px_rgba(66,45,84,0.08)] sm:px-10">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h3 className="leading-tight">
-              <span className="studio-script studio-effect block -rotate-[3deg] text-[22px] leading-none text-[#debf6d]">Studio</span>
-              <span className="block mt-0.5 text-[15px] font-black tracking-[0.1em] text-[#d10677]">KARINE REVERTE</span>
-            </h3>
+            <img
+              src="/images/logo-karine-reverte-transparent.png"
+              alt="Studio Karine Reverte"
+              className="h-auto w-[190px]"
+            />
             <p className="mt-1 text-base text-[#6a5a78]">Tv. Nicola de Giosa, 37 - Itaim Paulista, São Paulo</p>
           </div>
           <div className="text-base text-[#6a5a78] sm:text-right">

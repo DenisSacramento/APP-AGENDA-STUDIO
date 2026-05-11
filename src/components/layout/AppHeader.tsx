@@ -14,8 +14,11 @@ export const AppHeader = () => {
     <header className="sticky top-0 z-30 border-b border-zinc-200/80 bg-[#f6f2fb]/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="leading-tight">
-          <span className="studio-script studio-effect block -rotate-[5deg] text-[31px] leading-none text-[#debf6d]">Studio</span>
-          <span className="block -mt-1 text-[17px] font-black tracking-[0.1em] text-[#d10677]">KARINE REVERTE</span>
+          <img
+            src="/images/logo-karine-reverte-transparent.png"
+            alt="Studio Karine Reverte"
+            className="h-12 w-auto sm:h-14"
+          />
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex">
